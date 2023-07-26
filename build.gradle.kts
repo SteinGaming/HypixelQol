@@ -36,12 +36,7 @@ dependencies {
     mappings("de.oceanlabs.mcp:mcp_stable:22-1.8.9")
     forge("net.minecraftforge:forge:1.8.9-11.15.1.2318-1.8.9")
 
-    shadowImplementation("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
-        isTransitive = false // Dependencies of mixin are already bundled by minecraft
-    }
-    annotationProcessor("org.spongepowered:mixin:0.8.4-SNAPSHOT")
     shadowImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-
 }
 
 val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
