@@ -10,6 +10,12 @@ plugins {
     id("io.github.juuxel.loom-quiltflower") version "1.7.3"
 }
 
+loom {
+    forge {
+        pack200Provider.set(dev.architectury.pack200.java.Pack200Adapter())
+    }
+}
+
 group = "eu.steingaming"
 version = "1.0-SNAPSHOT"
 //setVersionFromEnvironment("2.1")
