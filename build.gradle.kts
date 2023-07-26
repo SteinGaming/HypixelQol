@@ -50,6 +50,10 @@ val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
     input.set(tasks.shadowJar.get().archiveFile)
     doLast {
         println("Jar name: ${archiveFile.get().asFile}")
+        copy {
+            from(archiveFile.get().asFile)
+            into("$rootDir/output")
+        }
     }
 }
 

@@ -40,7 +40,7 @@ jobs:
     - name: Release
       if: ${{ github.ref == 'refs/heads/main' }}
       run: |
-          ghr -delete v1.0.0 build/libs
+          ghr -delete v1.0.0 output/
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
