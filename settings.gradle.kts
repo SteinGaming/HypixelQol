@@ -1,5 +1,5 @@
 
-rootProject.name = "FishingQol"
+rootProject.name = "FishingQol-JOELUS"
 
 
 pluginManagement {

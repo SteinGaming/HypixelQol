@@ -6,10 +6,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.KeyBinding
+import net.minecraft.item.Item
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.sound.SoundEvent
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.event.entity.player.PlayerInteractEvent
+import net.minecraftforge.event.world.BlockEvent
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
@@ -28,14 +31,18 @@ class FishingQol {
     }
 
     var enabled = true
+    var ghostEnabled = false
+
     val scope = CoroutineScope(Dispatchers.Default)
 
     val keybind = KeyBinding("Toggle FishingQOL", Keyboard.KEY_I, "FishingQol")
+    val ghost = KeyBinding("Toggle Ghost Blocking", Keyboard.KEY_I, "FishingQol")
 
     @EventHandler
     fun preinit(event: FMLPreInitializationEvent) {
         MinecraftForge.EVENT_BUS.register(this)
         ClientRegistry.registerKeyBinding(keybind)
+        ClientRegistry.registerKeyBinding(ghost)
     }
 
     @SubscribeEvent
@@ -63,11 +70,25 @@ class FishingQol {
     }
 
     @SubscribeEvent
+    fun onPunch(event: PlayerInteractEvent) {
+        if ((!ghostEnabled && Item.getIdFromItem(Minecraft.getMinecraft().thePlayer.heldItem.item) != 285) ||
+            event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK || event.entityPlayer != Minecraft.getMinecraft().thePlayer) return
+        event.isCanceled = true
+        scope.launch {
+            delay(100)
+            Minecraft.getMinecraft().theWorld.setBlockToAir(event.pos)
+        }
+    }
+
+    @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (keybind.isPressed) {
             Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText(if (enabled) "§cFishingQol has been disabled!" else "§aFishingQol has been enabled!"))
             enabled = !enabled
         }
-
+        if (ghost.isPressed) {
+            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText(if (ghostEnabled) "§8Ghost-Blocks §chave been disabled!" else "§8Ghost-Blocks §ahave been enabled!"))
+            ghostEnabled = !ghostEnabled
+        }
     }
 }
