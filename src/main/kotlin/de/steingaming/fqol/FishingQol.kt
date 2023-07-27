@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.KeyBinding
 import net.minecraft.item.Item
@@ -69,10 +70,16 @@ class FishingQol {
         }
     }
 
+
+    val ignoreBlocks = listOf<Int>(77, 143, 54, 69)
     @SubscribeEvent
     fun onPunch(event: PlayerInteractEvent) {
         if ((!ghostEnabled && Item.getIdFromItem(Minecraft.getMinecraft().thePlayer?.heldItem?.item ?: return) != 285) ||
             event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK || event.entityPlayer != Minecraft.getMinecraft().thePlayer) return
+
+        if (Block.getIdFromBlock(Minecraft.getMinecraft().theWorld?.getBlockState(event.pos)?.block) in ignoreBlocks)
+            return
+
         event.isCanceled = true
         scope.launch {
             delay(100)
