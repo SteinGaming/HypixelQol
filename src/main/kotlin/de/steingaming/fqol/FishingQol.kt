@@ -71,7 +71,7 @@ class FishingQol {
 
     @SubscribeEvent
     fun onPunch(event: PlayerInteractEvent) {
-        if ((!ghostEnabled && Item.getIdFromItem(Minecraft.getMinecraft().thePlayer.heldItem.item) != 285) ||
+        if ((!ghostEnabled && Item.getIdFromItem(Minecraft.getMinecraft().thePlayer?.heldItem?.item ?: return) != 285) ||
             event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK || event.entityPlayer != Minecraft.getMinecraft().thePlayer) return
         event.isCanceled = true
         scope.launch {
