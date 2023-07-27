@@ -1,4 +1,4 @@
-package de.steingaming.fm
+package de.steingaming.fqol
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -68,6 +68,5 @@ class FishingQol {
             Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText(if (enabled) "§cFishingQol has been disabled!" else "§aFishingQol has been enabled!"))
             enabled = !enabled
         }
-
     }
 }
