@@ -1,4 +1,4 @@
-package de.steingaming.fm
+package de.steingaming.fqol
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
