@@ -54,7 +54,8 @@ class FishingQol {
                 ) > 2.0
             ) return
             scope.launch {
-                delay(Random.nextLong(200, 400))
+                val (min, max) = if (event.name == "game.player.swim.splash") 150L to 310L else 200L to 400L
+                delay(Random.nextLong(min, max))
                 Minecraft.getMinecraft().playerController.sendUseItem(
                     Minecraft.getMinecraft().thePlayer,
                     Minecraft.getMinecraft().theWorld,
