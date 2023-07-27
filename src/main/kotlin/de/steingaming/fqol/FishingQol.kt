@@ -40,26 +40,26 @@ class FishingQol {
 
     @SubscribeEvent
     fun onSound(event: SoundEvent.SoundSourceEvent) {
-        if (enabled && (event.name == "random.splash" || event.name == "game.player.swim.splash") && Minecraft.getMinecraft()?.thePlayer?.fishEntity != null) {
-            if (Minecraft.getMinecraft().thePlayer.fishEntity.positionVector.distanceTo(
-                    Vec3(event.sound.xPosF.toDouble(), event.sound.yPosF.toDouble(), event.sound.zPosF.toDouble())
-                ) > 2.0
-            ) return
-            scope.launch {
-                val (min, max) = if (event.name == "game.player.swim.splash") 150L to 310L else 200L to 400L
-                delay(Random.nextLong(min, max))
-                Minecraft.getMinecraft().playerController.sendUseItem(
-                    Minecraft.getMinecraft().thePlayer,
-                    Minecraft.getMinecraft().theWorld,
-                    Minecraft.getMinecraft().thePlayer.heldItem
-                )
-                delay(Random.nextLong(300, 600))
-                Minecraft.getMinecraft().playerController.sendUseItem(
-                    Minecraft.getMinecraft().thePlayer,
-                    Minecraft.getMinecraft().theWorld,
-                    Minecraft.getMinecraft().thePlayer.heldItem
-                )
-            }
+        if (enabled || (event.name != "random.splash" || event.name != "game.player.swim.splash") || Minecraft.getMinecraft()?.thePlayer?.fishEntity == null)
+            return
+        if (Minecraft.getMinecraft().thePlayer.fishEntity.positionVector.distanceTo(
+                Vec3(event.sound.xPosF.toDouble(), event.sound.yPosF.toDouble(), event.sound.zPosF.toDouble())
+            ) > 2.0
+        ) return
+        scope.launch {
+            val (min, max) = if (event.name == "game.player.swim.splash") 150L to 310L else 200L to 400L
+            delay(Random.nextLong(min, max))
+            Minecraft.getMinecraft().playerController.sendUseItem(
+                Minecraft.getMinecraft().thePlayer,
+                Minecraft.getMinecraft().theWorld,
+                Minecraft.getMinecraft().thePlayer.heldItem
+            )
+            delay(Random.nextLong(300, 600))
+            Minecraft.getMinecraft().playerController.sendUseItem(
+                Minecraft.getMinecraft().thePlayer,
+                Minecraft.getMinecraft().theWorld,
+                Minecraft.getMinecraft().thePlayer.heldItem
+            )
         }
     }
 
