@@ -40,7 +40,7 @@ class FishingQol {
 
     @SubscribeEvent
     fun onSound(event: SoundEvent.SoundSourceEvent) {
-        if (enabled || (event.name != "random.splash" || event.name != "game.player.swim.splash") || Minecraft.getMinecraft()?.thePlayer?.fishEntity == null)
+        if (!enabled || (event.name != "random.splash" && event.name != "game.player.swim.splash") || Minecraft.getMinecraft()?.thePlayer?.fishEntity == null)
             return
         if (Minecraft.getMinecraft().thePlayer.fishEntity.positionVector.distanceTo(
                 Vec3(event.sound.xPosF.toDouble(), event.sound.yPosF.toDouble(), event.sound.zPosF.toDouble())
