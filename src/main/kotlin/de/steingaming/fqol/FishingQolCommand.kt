@@ -46,7 +46,7 @@ class FishingQolCommand : ICommand {
                 config.enabled = !config.enabled
                 saveConfig()
             }
-            "lava", "water", "post" -> let {
+            "lava", "water", "throw" -> let {
                 val type = args.getOrNull(1)?.lowercase()?.takeIf { it == "min" || it == "max" }
                     ?: return@let error("Invalid Argument. Either use §2\"min\" §cor §2\"max\"")
                 val new = args.getOrNull(2)?.toLongOrNull() ?: return@let error("No or invalid Number given")
@@ -55,7 +55,7 @@ class FishingQolCommand : ICommand {
                     when (args[0].lowercase()) {
                         "lava" -> lavaPreCatchDelay
                         "water" -> waterPreCatchDelay
-                        "post" -> castRodDelay
+                        "throw" -> castRodDelay
                         else -> throw Exception("AYO?")
                     }
                 }.run {
@@ -98,7 +98,7 @@ class FishingQolCommand : ICommand {
                                         config.lavaPreCatchDelay.max.toString().format()
                                     ),
                                     arrayOf(
-                                        "Post-", // Thank you for trimming the chat mojang :)
+                                        "Throw", // Thank you for trimming the chat mojang :)
                                         config.castRodDelay.min.toString().format(),
                                         config.castRodDelay.max.toString().format()
                                     )
@@ -153,6 +153,7 @@ class FishingQolCommand : ICommand {
 
         val namesMax = names.maxOf { it.length + 1 } // +1 for a space
         val valuesMax = valuesRowed.map { it.maxOf { i -> i.length } }
+        val valuesMin = valuesRowed.map { it.minOf { i -> i.length } }
         val max = namesMax + values.maxOf { it.sumOf { i -> i.length } }
         println("Names Max: $namesMax")
         println("Values Max: $valuesMax")
@@ -162,12 +163,13 @@ class FishingQolCommand : ICommand {
             operator fun String.unaryMinus() = appendLine(this)
             -"-".repeat(max)
             var i = 0
-            +names.joinToString(" | ", prefix = " ", postfix = " ") { name -> "$name${" ".repeat(max(0, valuesMax[i++] - name.length))}" }
+            +names.joinToString("|", postfix = " ") { name -> " $name${" ".repeat(max(1, valuesMax[i++] - name.length))}" }
             -"| ${"=".repeat(max - 2)} |"
-            for (column in values) {
-                +buildString {
+            for ((columnIndex, column) in values.withIndex()) {
+                -buildString {
+                    append("|")
                     for ((index, value) in column.withIndex()) {
-                        append(" $value${" ".repeat(max(0, valuesMax[index] - value.length))}${if (index < column.size - 1) " |" else ""}")
+                        append(" $value${if (index == 0 && valuesMin[index] == value.length) " " else ""}${" ".repeat(max(1, valuesMax[index] - value.length))}|")
                     }
                 }
             }
