@@ -39,9 +39,6 @@ class FishingQol {
         val config: FishingQolConfig
             get() = instance.config
 
-        fun resetConfig() {
-            instance.config = FishingQolConfig()
-        }
     }
 
     init {
@@ -81,7 +78,7 @@ class FishingQol {
             return
         if (Minecraft.getMinecraft().thePlayer.fishEntity.positionVector.distanceTo(
                 Vec3(event.sound.xPosF.toDouble(), event.sound.yPosF.toDouble(), event.sound.zPosF.toDouble())
-            ) > 2.0
+            ) > config.properties.soundDistanceToRod
         ) return
         scope.launch {
             val (min, max) = if (event.name == "game.player.swim.splash") config.lavaPreCatchDelay else config.waterPreCatchDelay
@@ -101,12 +98,51 @@ class FishingQol {
         }
     }
 
+
+    var ticks = 0
+    var ticksNotFishing = 0
+
+
+    var lastMovement: Pair<Float, Float>? = null
+
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
+        if (event.phase != TickEvent.Phase.START || Minecraft.getMinecraft().thePlayer == null) return
         if (keybind.isPressed) {
             Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText(if (config.enabled) "§cFishingQol has been disabled!" else "§aFishingQol has been enabled!"))
             config.enabled = !config.enabled
             saveConfig()
+        }
+
+        if (!config.enabled)
+            return
+        if (config.properties.inactivityDisableTicks != 0L)
+            if (Minecraft.getMinecraft().thePlayer.fishEntity == null && ticksNotFishing++ > config.properties.inactivityDisableTicks) {
+                ticksNotFishing = 0
+                Minecraft.getMinecraft().thePlayer.addChatMessage(
+                    ChatComponentText(
+                        "§cFishingQol has been automatically disabled due to you not fishing for ${config.properties.inactivityDisableTicks/20} seconds"
+                    )
+                )
+                config.enabled = false
+                saveConfig()
+            } else if (Minecraft.getMinecraft().thePlayer.fishEntity != null && ticksNotFishing != 0)
+                ticksNotFishing = 0
+
+        if (Minecraft.getMinecraft().thePlayer.fishEntity != null && config.properties.randomMovementTicks != 0L && ticks++ > config.properties.randomMovementTicks) {
+            ticks = 0
+            if (!Minecraft.getMinecraft().thePlayer.onGround) return
+            Minecraft.getMinecraft().thePlayer.jump()
+            val (strafe, forward) = lastMovement?.let {
+                lastMovement = null
+                -it.first to -it.second
+            } ?: (Random.nextDouble(-0.3134, 0.3245).toFloat() to
+                    Random.nextDouble(-0.4635, 0.4534).toFloat()).also {
+                lastMovement = it
+            }
+            Minecraft.getMinecraft().thePlayer.moveEntityWithHeading(
+                strafe, forward
+            )
         }
     }
 
