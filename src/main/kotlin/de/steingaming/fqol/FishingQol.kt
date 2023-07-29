@@ -81,6 +81,9 @@ class FishingQol {
         ClientCommandHandler.instance.registerCommand(
             SpassHaben()
         )
+        ClientCommandHandler.instance.registerCommand(
+            FishingQolGhostCommand()
+        )
     }
 
     @SubscribeEvent
@@ -110,13 +113,12 @@ class FishingQol {
     }
 
 
-    val ignoreBlocks = listOf<Int>(77, 143, 54, 69)
     @SubscribeEvent
     fun onPunch(event: PlayerInteractEvent) {
         if ((!ghostEnabled && Item.getIdFromItem(Minecraft.getMinecraft().thePlayer?.heldItem?.item ?: return) != 285) ||
             event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK || event.entityPlayer != Minecraft.getMinecraft().thePlayer) return
 
-        if (Block.getIdFromBlock(Minecraft.getMinecraft().theWorld?.getBlockState(event.pos)?.block) in ignoreBlocks)
+        if (Block.getIdFromBlock(Minecraft.getMinecraft().theWorld?.getBlockState(event.pos)?.block) in config.ignoreBlockList)
             return
 
         event.isCanceled = true
