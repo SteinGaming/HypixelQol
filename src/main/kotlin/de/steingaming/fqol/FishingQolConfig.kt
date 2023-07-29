@@ -22,7 +22,7 @@ data class FishingQolConfig(
 
         fun set(name: String, value: String) {
             when (name.lowercase()) {
-                "randomMovement".lowercase() -> {
+                "randomMovementTicks".lowercase() -> {
                     randomMovementTicks =
                         value.toLongOrNull() ?: throw InvalidValueException("Should be long (number) instead")
                 }
