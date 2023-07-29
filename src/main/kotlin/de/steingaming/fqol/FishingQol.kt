@@ -136,8 +136,8 @@ class FishingQol {
             val (strafe, forward) = lastMovement?.let {
                 lastMovement = null
                 -it.first to -it.second
-            } ?: (Random.nextDouble(-0.3134, 0.3245).toFloat() to
-                    Random.nextDouble(-0.4635, 0.4534).toFloat()).also {
+            } ?: (Random.nextDouble(-0.6, 0.6).toFloat() to
+                    Random.nextDouble(-0.6, 0.6).toFloat()).also {
                 lastMovement = it
             }
             Minecraft.getMinecraft().thePlayer.moveEntityWithHeading(
