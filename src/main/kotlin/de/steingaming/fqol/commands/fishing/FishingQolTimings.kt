@@ -1,14 +1,15 @@
-package de.steingaming.fqol.commands
+package de.steingaming.fqol.commands.fishing
 
-import de.steingaming.fqol.FishingQol
-import de.steingaming.fqol.FishingQol.Companion.config
-import de.steingaming.fqol.FishingQolCommand.Companion.table
-import de.steingaming.fqol.FishingQolConfig
+import de.steingaming.fqol.HypixelQol
+import de.steingaming.fqol.commands.FishingQolCommand.Companion.table
+import de.steingaming.fqol.config.subconfigs.FishingConfig
 import net.minecraft.client.Minecraft
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.ChatComponentText
 
 object FishingQolTimings {
+     val config: FishingConfig
+         get() = HypixelQol.config.fishingConfig
      fun timings(sender: ICommandSender, args: Array<out String>) {
         fun error(msg: String) {
             sender.addChatMessage(ChatComponentText("§cError: $msg"))
@@ -16,14 +17,14 @@ object FishingQolTimings {
         when (args.getOrNull(0)?.lowercase()) {
             null -> null
             "reset" -> {
-                val newConfig = FishingQolConfig()
+                val newConfig = FishingConfig()
                 config.castRodDelay.min = newConfig.castRodDelay.min // ik this seems bad, and it is
                 config.castRodDelay.max = newConfig.castRodDelay.max
                 config.lavaPreCatchDelay.min = newConfig.lavaPreCatchDelay.min
                 config.lavaPreCatchDelay.max = newConfig.lavaPreCatchDelay.max
                 config.waterPreCatchDelay.min = newConfig.waterPreCatchDelay.min
                 config.waterPreCatchDelay.max = newConfig.waterPreCatchDelay.max
-                FishingQol.saveConfig()
+                HypixelQol.saveConfig()
                 sender.addChatMessage(
                     ChatComponentText(
                         "§1Done resetting the timings!"
@@ -34,7 +35,7 @@ object FishingQolTimings {
             "toggle" -> {
                 Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText(if (config.enabled) "§cFishingQol has been disabled!" else "§aFishingQol has been enabled!"))
                 config.enabled = !config.enabled
-                FishingQol.saveConfig()
+                HypixelQol.saveConfig()
             }
 
             "lava", "water", "throw" -> let {
@@ -65,7 +66,7 @@ object FishingQolTimings {
                     }
                 }
                 sender.addChatMessage(ChatComponentText("§aSet §2$type §afor §2${args[0].lowercase()} §afrom §c$oldVal §ato §9$new"))
-                FishingQol.saveConfig()
+                HypixelQol.saveConfig()
             }
 
             else -> null

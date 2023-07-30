@@ -8,7 +8,6 @@ import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumParticleTypes
-import kotlin.system.exitProcess
 
 class SpassHaben: ICommand {
     override fun compareTo(other: ICommand?): Int {

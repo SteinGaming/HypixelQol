@@ -1,28 +1,30 @@
-package de.steingaming.fqol
+package de.steingaming.fqol.commands
 
+import de.steingaming.fqol.HypixelQol
 import net.minecraft.block.Block
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
 import net.minecraft.util.ChatComponentText
-import de.steingaming.fqol.FishingQol.Companion.config
-import de.steingaming.fqol.FishingQol.Companion.saveConfig
+import de.steingaming.fqol.HypixelQol.Companion.saveConfig
+import de.steingaming.fqol.config.subconfigs.GhostConfig
 
-class FishingQolGhostCommand : ICommand {
+class GhostQolCommand : ICommand {
     override fun compareTo(other: ICommand?): Int {
         return commandName.compareTo(other?.commandName ?: return 0)
     }
 
-    override fun getCommandName(): String = "fqolghost"
+    override fun getCommandName(): String = "ghostqol"
 
-    override fun getCommandUsage(sender: ICommandSender?): String = "/fqolghost [add/remove] [material]"
+    override fun getCommandUsage(sender: ICommandSender?): String = "/ghostqol [add/remove] [material]"
 
-    override fun getCommandAliases(): MutableList<String> = mutableListOf()
+    override fun getCommandAliases(): MutableList<String> = mutableListOf("gqol")
 
     override fun processCommand(sender: ICommandSender?, args: Array<out String>?) {
         fun error(msg: String) {
             sender?.addChatMessage(ChatComponentText("§cError: $msg"))
         }
+        val config = HypixelQol.config.ghostConfig
         if (sender == null) return
         if (args == null) return
         when (args.getOrNull(0)?.lowercase()) {
@@ -57,7 +59,7 @@ class FishingQolGhostCommand : ICommand {
             }
             "reset" -> let {
                 config.ignoreBlockList.clear()
-                config.ignoreBlockList.addAll(FishingQolConfig().ignoreBlockList)
+                config.ignoreBlockList.addAll(GhostConfig().ignoreBlockList)
                 saveConfig()
                 sender.addChatMessage(
                     ChatComponentText("§aSuccessfully reset ignored blocks to default!")
@@ -87,6 +89,7 @@ class FishingQolGhostCommand : ICommand {
         pos: BlockPos?
     ): MutableList<String> {
         if ((args?.size ?: 0) > 2) return mutableListOf()
+        val config = HypixelQol.config.ghostConfig
 
         val input = args?.getOrNull(1)
         return when (args?.getOrNull(0)?.lowercase()) {

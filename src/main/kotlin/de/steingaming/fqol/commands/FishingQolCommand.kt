@@ -1,7 +1,10 @@
-package de.steingaming.fqol
 
-import de.steingaming.fqol.commands.FishingQolProperties.properties
-import de.steingaming.fqol.commands.FishingQolTimings.timings
+package de.steingaming.fqol.commands
+
+import de.steingaming.fqol.HypixelQol
+import de.steingaming.fqol.Utilities
+import de.steingaming.fqol.commands.fishing.FishingQolProperties.properties
+import de.steingaming.fqol.commands.fishing.FishingQolTimings.timings
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
@@ -14,11 +17,11 @@ class FishingQolCommand : ICommand {
         return commandName.compareTo(other?.commandName ?: return 0)
     }
 
-    override fun getCommandName(): String = "fqol"
+    override fun getCommandName(): String = "fishingqol"
 
-    override fun getCommandUsage(sender: ICommandSender?): String = "/fqol"
+    override fun getCommandUsage(sender: ICommandSender?): String = "/fishingqol"
 
-    override fun getCommandAliases(): MutableList<String> = mutableListOf()
+    override fun getCommandAliases(): MutableList<String> = mutableListOf("fqol")
 
 
     override fun processCommand(sender: ICommandSender?, args: Array<out String>?) {
@@ -44,26 +47,7 @@ class FishingQolCommand : ICommand {
     ): MutableList<String> {
         if (sender == null || args == null) return mutableListOf()
 
-        fun options(
-            options: List<String>,
-            input: String?,
-            position: Int,
-            runner: (String) -> MutableList<String>
-        ): MutableList<String> {
-            return when {
-                input == null || input == "" -> null
-
-                input.lowercase() in options -> {
-                    if (args.getOrNull(position + 1) != null)
-                        runner(input)
-                    else options.toMutableList()
-                }
-
-                else -> if (args.size < (position + 2)) options.filter {
-                    it.startsWith(args[position], true)
-                }.toMutableList() else mutableListOf()
-            } ?: options.toMutableList()
-        }
+        val options = Utilities.options(args)
 
         return options(listOf("timings", "properties"), args.getOrNull(0), 0) {
             when (it.lowercase()) {
@@ -78,7 +62,7 @@ class FishingQolCommand : ICommand {
 
                 "properties" -> {
                     options(listOf("set", "reset"), args.getOrNull(1), 1) {
-                        options(FishingQol.config.properties.namesList(), args.getOrNull(2), 2) {
+                        options(HypixelQol.config.fishingConfig.properties.properties.namesList(), args.getOrNull(2), 2) {
                             mutableListOf()
                         }
                     }
@@ -97,7 +81,7 @@ class FishingQolCommand : ICommand {
 
     companion object {
 
-        fun <T> Array<Array<T>>.getRow(row: Int): List<T> {
+        private fun <T> Array<Array<T>>.getRow(row: Int): List<T> {
             val list = mutableListOf<T>()
             var i = 0
             while (true) {
@@ -105,7 +89,7 @@ class FishingQolCommand : ICommand {
             }
         }
 
-        fun <T> Array<Array<T>>.rowed(): List<List<T>> {
+        private fun <T> Array<Array<T>>.rowed(): List<List<T>> {
             val list = mutableListOf<List<T>>()
             var row = 0
             while (true) {
