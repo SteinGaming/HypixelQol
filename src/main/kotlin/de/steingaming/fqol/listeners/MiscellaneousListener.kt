@@ -6,8 +6,6 @@ import net.minecraft.block.material.Material
 import net.minecraft.client.Minecraft
 import net.minecraft.item.Item
 import net.minecraft.util.BlockPos
-import net.minecraft.util.ChatComponentText
-import net.minecraft.util.MovingObjectPosition
 import net.minecraft.util.MovingObjectPosition.MovingObjectType
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -29,7 +27,7 @@ class MiscellaneousListener {
 
     @SubscribeEvent
     fun termTickListener(e: TickEvent.ClientTickEvent) {
-        if (terminatorTicks == null) return
+        if (HypixelQol.config.miscConfig.terminatorCPS == 0L) return
         if (e.phase != TickEvent.Phase.START || Minecraft.getMinecraft()?.thePlayer == null || Minecraft.getMinecraft().isGamePaused || Minecraft.getMinecraft().currentScreen != null) return
 
 
@@ -69,7 +67,7 @@ class MiscellaneousListener {
             }
 
             MovingObjectType.BLOCK -> {
-                val blockpos: BlockPos = Minecraft.getMinecraft().objectMouseOver.blockPos;
+                val blockpos: BlockPos = Minecraft.getMinecraft().objectMouseOver.blockPos
                 if (Minecraft.getMinecraft().theWorld.getBlockState(blockpos).block.material != Material.air) {
                     Minecraft.getMinecraft().playerController.clickBlock(
                         blockpos, Minecraft.getMinecraft().objectMouseOver.sideHit
