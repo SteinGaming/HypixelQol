@@ -5,7 +5,7 @@ import de.steingaming.fqol.annotations.Hidden
 import de.steingaming.fqol.config.HypixelQolConfig
 
 data class MiscellaneousConfig(
-    val terminatorAutoTicks: Long = 0
+    val terminatorCPS: Long = 0
 ) {
     @Hidden
     @Transient

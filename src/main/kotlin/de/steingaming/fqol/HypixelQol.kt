@@ -62,24 +62,41 @@ class HypixelQol {
         instance = this
     }
 
-    lateinit var config: HypixelQolConfig
-        private set
+
+    val config: HypixelQolConfig
+        get() {
+            return actualConfig ?:
+                runBlocking {
+                    configJob?.join()
+                    actualConfig!!
+                }
+        }
+
+    private var actualConfig: HypixelQolConfig? = null
 
 
     private val fishing = KeyBinding("Toggle Fishing QoL", Keyboard.KEY_I, "HypixelQol")
     private val ghost = KeyBinding("Toggle Ghost Blocking", Keyboard.KEY_I, "HypixelQol")
 
+    private var configJob: Job? = null
     @EventHandler
     fun preinit(event: FMLPreInitializationEvent) {
-        val file = File("config/hypixel_qol.json")
-        config = (try {
-            gson.fromJson(file.readText(), HypixelQolConfig::class.java)
-        } catch (e: Exception) {
-            null
-        } ?: HypixelQolConfig())
-        scope.launch {
+        // since having this mod, others config had been reset
+        // this should ensure that it doesn't conflict with any other mod anymore
+        configJob = scope.launch {
             withContext(Dispatchers.IO) {
-                saveConfig()
+                val file = File("config/hypixel_qol.json")
+                actualConfig = (try {
+                    gson.fromJson(file.readText(), HypixelQolConfig::class.java)
+                } catch (e: Exception) {
+                    null
+                } ?: HypixelQolConfig())
+                launch {
+                    withContext(Dispatchers.IO) {
+                        delay(3000)
+                        saveConfig()
+                    }
+                }
             }
         }
 
