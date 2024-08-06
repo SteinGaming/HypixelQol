@@ -6,6 +6,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import de.steingaming.fqol.annotations.Hidden
+import de.steingaming.fqol.brush.BrushListener
+import de.steingaming.fqol.commands.ApplyBrushConfig
 import de.steingaming.fqol.commands.FishingQolCommand
 import de.steingaming.fqol.commands.GhostQolCommand
 import de.steingaming.fqol.commands.MiscellaneousQolCommand
@@ -104,6 +106,7 @@ class HypixelQol {
         MinecraftForge.EVENT_BUS.register(FishingListener())
         MinecraftForge.EVENT_BUS.register(GhostListener())
         MinecraftForge.EVENT_BUS.register(MiscellaneousListener())
+        MinecraftForge.EVENT_BUS.register(BrushListener())
 
         ClientRegistry.registerKeyBinding(fishing)
         ClientRegistry.registerKeyBinding(ghost)
@@ -119,6 +122,9 @@ class HypixelQol {
         )
         ClientCommandHandler.instance.registerCommand(
             MiscellaneousQolCommand()
+        )
+        ClientCommandHandler.instance.registerCommand(
+            ApplyBrushConfig()
         )
     }
 
