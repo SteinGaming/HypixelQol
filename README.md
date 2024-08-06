@@ -1,5 +1,6 @@
 # HypixelQol
 
+
 A hypixel <span style="font-size:7px">~~macro~~</span> improvement mod for Hypixel Skyblock.
 
 ## Table of Contents
