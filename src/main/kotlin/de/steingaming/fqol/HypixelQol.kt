@@ -36,7 +36,7 @@ import java.lang.reflect.Modifier
 class HypixelQol {
     companion object {
         const val MODID = "hypixelqol"
-        const val MODVERSION = "1.0.0"
+        const val MODVERSION = "1.1.0"
         val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().addSerializationExclusionStrategy(
             object: ExclusionStrategy {
                 override fun shouldSkipField(f: FieldAttributes?): Boolean {
