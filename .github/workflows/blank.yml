@@ -7,11 +7,15 @@
 
 name: Java CI with Gradle
 
+#on:
+#  push:
+#    branches: [ "main" ]
+#  pull_request:
+#    branches: [ "main" ]
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - '*'
 
 permissions:
   contents: write
@@ -38,9 +42,9 @@ jobs:
     - name: Install GHR
       run: go install github.com/tcnksm/ghr@latest
     - name: Release
-      if: ${{ github.ref == 'refs/heads/main' }}
+      #if: ${{ github.ref == 'refs/heads/main' }}
       run: |
-          ghr -delete v1.0.0 output/
+          ghr -delete -generatenotes ${{ github.ref_name }} output/
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
