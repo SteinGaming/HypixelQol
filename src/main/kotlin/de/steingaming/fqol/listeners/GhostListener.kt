@@ -39,7 +39,8 @@ class GhostListener {
                     val block = event.pos.direction(direction, i) ?: return@launch
                     if (Block.getIdFromBlock(
                             Minecraft.getMinecraft().theWorld?.getBlockState(block)?.block ?: return@launch
-                        ) in config.ghostConfig.ignoreBlockList)
+                        ) in config.ghostConfig.ignoreBlockList
+                    ) continue
                     // Check if block exists, else break
                     if (Minecraft.getMinecraft().theWorld.getBlockState(block).block.material == Material.air) break
                     Minecraft.getMinecraft().theWorld.setBlockToAir(block)
