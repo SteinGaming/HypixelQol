@@ -17,7 +17,7 @@ loom {
 }
 
 group = "eu.steingaming"
-version = "1.1-SNAPSHOT"
+version = "1.1.1-SNAPSHOT"
 //setVersionFromEnvironment("2.1")
 repositories {
     mavenCentral()
