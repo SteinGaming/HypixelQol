@@ -44,7 +44,7 @@ jobs:
     - name: Release
       #if: ${{ github.ref == 'refs/heads/main' }}
       run: |
-          ghr -delete -generatenotes ${{ github.ref_name }} output/
+          ghr -delete ${{ github.ref_name }} output/
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
