@@ -12,7 +12,7 @@ pluginManagement {
         maven(url = "https://jitpack.io/")
         maven(url = "https://maven.minecraftforge.net/")
         maven(url = "https://repo.spongepowered.org/maven/")
-        maven(url = "https://repo.sk1er.club/repository/maven-releases/")
+        maven(url = "https://repo.essential.gg/repository/maven-releases/")
         maven(url = "https://maven.architectury.dev/")
     }
     resolutionStrategy {
