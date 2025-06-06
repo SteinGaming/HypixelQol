@@ -12,9 +12,9 @@ class BrushListener {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     fun onChunkRender(event: ChunkEvent.Load) {
-        if (!Minecraft.getMinecraft().theWorld.scoreboard.teams.map { "${it.colorPrefix} ${it.colorSuffix}" }.any {
+        if (Minecraft.getMinecraft()?.theWorld?.scoreboard?.teams?.map { "${it.colorPrefix} ${it.colorSuffix}" }?.any {
                 dungeons7Regex.matches(it)
-            }) return
+            } != true) return
         GlobalScope.launch {
             Brush.applyM7(event.chunk)
         }
