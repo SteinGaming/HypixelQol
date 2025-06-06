@@ -1,0 +1,9 @@
+{
+  "package": "de.steingaming.fqol.mixins.transformers",
+  "refmap": "mixins.hypixelqol.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AccessorMinecraft",
+    "AccessorEventBus"
+  ]
+}

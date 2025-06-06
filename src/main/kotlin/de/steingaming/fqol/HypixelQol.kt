@@ -11,11 +11,15 @@ import de.steingaming.fqol.commands.ApplyBrushConfig
 import de.steingaming.fqol.commands.FishingQolCommand
 import de.steingaming.fqol.commands.GhostQolCommand
 import de.steingaming.fqol.commands.MiscellaneousQolCommand
+import de.steingaming.fqol.commands.RiftQolCommand
 import de.steingaming.fqol.config.HypixelQolConfig
 import de.steingaming.fqol.listeners.FishingListener
 import de.steingaming.fqol.listeners.GhostListener
 import de.steingaming.fqol.listeners.MiscellaneousListener
+import de.steingaming.fqol.listeners.RiftListener
 import kotlinx.coroutines.*
+import net.hypixel.modapi.handler.ClientboundPacketHandler
+import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.KeyBinding
 import net.minecraft.util.ChatComponentText
@@ -30,6 +34,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 import org.lwjgl.input.Keyboard
 import java.io.File
 import java.lang.reflect.Modifier
+import kotlin.jvm.optionals.getOrNull
 
 
 @Mod(modid = HypixelQol.MODID, version = HypixelQol.MODVERSION, clientSideOnly = true)
@@ -108,6 +113,14 @@ class HypixelQol {
         MinecraftForge.EVENT_BUS.register(MiscellaneousListener())
         MinecraftForge.EVENT_BUS.register(BrushListener())
 
+        net.hypixel.modapi.HypixelModAPI.getInstance().createHandler<ClientboundLocationPacket>(
+            ClientboundLocationPacket::class.java, ClientboundPacketHandler { packet ->
+                if (packet.mode.getOrNull() == "rift") {
+                    MinecraftForge.EVENT_BUS.register(RiftListener)
+                } else
+                    MinecraftForge.EVENT_BUS.unregister(RiftListener)
+            })
+
         ClientRegistry.registerKeyBinding(fishing)
         ClientRegistry.registerKeyBinding(ghost)
 
@@ -125,6 +138,9 @@ class HypixelQol {
         )
         ClientCommandHandler.instance.registerCommand(
             ApplyBrushConfig()
+        )
+        ClientCommandHandler.instance.registerCommand(
+            RiftQolCommand()
         )
     }
 

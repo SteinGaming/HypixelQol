@@ -21,4 +21,8 @@ object Utilities {
             } ?: options.toMutableList()
         }
     }
+
+    fun String.cleanupColorCodes(): String {
+        return this.replace("[\u00a7&][0-9a-fk-or]".toRegex(), "")
+    }
 }

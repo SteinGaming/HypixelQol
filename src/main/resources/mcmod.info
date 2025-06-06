@@ -13,6 +13,6 @@
     "credits": "",
     "logoFile": "",
     "screenshots": [],
-    "dependencies": []
+    "dependencies": ["hypixel_mod_api"]
   }
 ]
