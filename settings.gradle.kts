@@ -23,3 +23,6 @@ pluginManagement {
         }
     }
 }
+
+include(":forge-1.8.9")
+include(":fabric-1.21.5")

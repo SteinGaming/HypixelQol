@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "hypixel-qol",
+  "version": "${version}",
+  "name": "Hypixel Qol",
+  "description": "Just a better fishing mod! (USE AT YOUR OWN RISK)",
+  "authors": [
+    "SteinGaming"
+  ],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      {
+        "value": "de.steingaming.hqol.fabric.HypixelQolFabric",
+        "adapter": "kotlin"
+      }
+    ],
+    "modmenu":
+    [
+      "de.steingaming.hqol.fabric.HypixelQolModMenu"
+    ]
+  },
+  "mixins": [
+    "hypixel-qol.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.5",
+    "java": ">=21",
+    "fabric-api": "*",
+    "fabric-language-kotlin": "*",
+    "yet_another_config_lib_v3": ">=${yacl_version}"
+  }
+}
