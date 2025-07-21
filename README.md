@@ -9,11 +9,9 @@ A hypixel <span style="font-size:7px">~~macro~~</span> improvement mod for Hypix
 2. [Building it yourself](#building-it-yourself)
 
 ### How to use the fishing feature
-
-You can toggle it with the Keybind, which you should set yourself in the Controls Menu (should be "I" key by default). <br>
-When toggleing, a chat message of it's state in the chat. <br>
-
-If you have it enabled then just cast your rod and wait!
+This project has been split into two versions, **which are currently out-of-sync and incompatible with each other**:
+- [Documentation for Forge 1.8.9](forge-1.8.9/README.md)
+- [Documentation for Fabric 1.21.5](fabric-1.21.5/README.md)
 
 ### Building it yourself
 
