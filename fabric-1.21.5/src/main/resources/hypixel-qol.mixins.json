@@ -3,8 +3,6 @@
   "package": "de.steingaming.hqol.fabric.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "FishingBobberEntityAccessor",
-    "MinecraftClientInvoker",
-    "FishingBobberEntityInjector"
+    "MinecraftClientInvoker"
   ]
 }

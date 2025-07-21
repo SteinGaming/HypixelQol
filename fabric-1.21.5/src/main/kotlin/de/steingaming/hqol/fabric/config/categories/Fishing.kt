@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionGroup
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder
+import dev.isxander.yacl3.api.controller.StringControllerBuilder
 import net.minecraft.text.Text
 
 data class Fishing(
@@ -16,7 +17,9 @@ data class Fishing(
     var waterHookDelayRange: RangeValue = RangeValue(50, 200),
     var lavaHookDelayRange: RangeValue = RangeValue(50, 200),
     var rethrowHookDelay: RangeValue = RangeValue(50, 125),
-    var maximumSoundDistance: Double = 0.1
+    var maximumSoundDistance: Double = 0.1,
+    var legacyWaterSoundPath: String = "random/splash",
+    var legacyLavaSoundPath: String = "game/player/swim/splash",
 ) : CategoryBase() {
 
     override fun generateSubcategoryUI(): ConfigCategory {
@@ -77,6 +80,28 @@ data class Fishing(
                                     .range(0.0, 1.0)
                                     .step(0.05)
                             }
+                            .build()
+                    )
+                    .option(
+                        Option.createBuilder<String>()
+                            .name(Text.of("Sound Trigger: §9Water §r(EXPERT OPTION)"))
+                            .binding(
+                                defaultConfig.legacyWaterSoundPath,
+                                { legacyWaterSoundPath },
+                                { legacyWaterSoundPath = it }
+                            )
+                            .controller(StringControllerBuilder::create)
+                            .build()
+                    )
+                    .option(
+                        Option.createBuilder<String>()
+                            .name(Text.of("Sound Trigger: §cLava §r(EXPERT OPTION)"))
+                            .binding(
+                                defaultConfig.legacyLavaSoundPath,
+                                { legacyLavaSoundPath },
+                                { legacyLavaSoundPath = it }
+                            )
+                            .controller(StringControllerBuilder::create)
                             .build()
                     )
                     .build()

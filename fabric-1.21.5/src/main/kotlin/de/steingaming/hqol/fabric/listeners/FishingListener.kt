@@ -2,14 +2,15 @@ package de.steingaming.hqol.fabric.listeners
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.config.controller.range.RangeValue
-import de.steingaming.hqol.fabric.mixins.FishingBobberEntityAccessor
 import de.steingaming.hqol.fabric.mixins.MinecraftClientInvoker
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.sound.SoundInstance
 import net.minecraft.client.sound.WeightedSoundSet
+import net.minecraft.entity.EntityType
 import net.minecraft.fluid.Fluids
 import net.minecraft.text.Text
 import net.minecraft.util.math.Vec3d
@@ -19,50 +20,16 @@ class FishingListener {
         MinecraftClient.getInstance().soundManager.registerListener { a, b, c ->
             this.onSound(a, b, c)
         }
+        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick {
+            onTick(it)
+        })
     }
 
     companion object {
-        const val FISH_HOOKED_WATER = "random/splash"
-        const val FISH_HOOKED_LAVA = "game/player/swim/splash"
         private val COROUTINE_SCOPE = CoroutineScope(Dispatchers.Default)
 
         var fishMutex: Mutex = Mutex()
         var fishJob: Job? = null
-
-        @JvmStatic
-        fun onDataValueFishCaught() = runBlocking {
-            val config by HypixelQolFabric
-            if (!config.fishing.enabled || config.fishing.useLegacyDetection) return@runBlocking
-
-            val minecraftClient = MinecraftClient.getInstance()
-            val fishHook = minecraftClient.player?.fishHook ?: return@runBlocking
-            val fishHookAccessor = fishHook as FishingBobberEntityAccessor
-            // Revalidate mixin's claim
-            if (!fishHookAccessor.isFishingCaught_hqol) return@runBlocking
-
-            var range: RangeValue? = null
-
-            for (i in -1..4) {
-                val block = minecraftClient.world!!.getBlockState(fishHook.blockPos.down(i))
-                if (block.fluidState.fluid == Fluids.WATER || block.fluidState.fluid == Fluids.FLOWING_WATER) {
-                    range = config.fishing.waterHookDelayRange
-                    break
-                } else if (block.fluidState.fluid == Fluids.LAVA || block.fluidState.fluid == Fluids.FLOWING_LAVA) {
-                    range = config.fishing.lavaHookDelayRange
-                    break
-                }
-            }
-            range ?: let {
-                minecraftClient.inGameHud.chatHud.addMessage(Text.of("Could not find a fluid block!"))
-                return@runBlocking
-            }
-
-            fishMutex.withLock {
-                if (fishJob?.isActive == true) return@withLock
-                fishJob = launchFishJob(range)
-            }
-
-        }
 
         @JvmStatic
         fun launchFishJob(range: RangeValue): Job = COROUTINE_SCOPE.launch {
@@ -74,25 +41,69 @@ class FishingListener {
 
             delay(config.fishing.rethrowHookDelay.getRandomValue().toLong())
             minecraftClientInvoker.doItemUse_hqol()
+
+            // Post delay
+            delay(500)
         }
     }
 
     fun onSound(instance: SoundInstance, soundSet: WeightedSoundSet, range: Float) {
         val soundPath = instance.sound.identifier.path
-        if (soundPath != FISH_HOOKED_WATER && soundPath != FISH_HOOKED_LAVA) return
-
         val config by HypixelQolFabric
+
         if (!config.fishing.enabled || !config.fishing.useLegacyDetection) return
+
+        val range =
+            when (soundPath) {
+                config.fishing.legacyWaterSoundPath -> config.fishing.waterHookDelayRange
+                config.fishing.legacyLavaSoundPath -> config.fishing.lavaHookDelayRange
+                else -> return
+            }
+        if (soundPath != config.fishing.legacyWaterSoundPath && soundPath != config.fishing.legacyLavaSoundPath) return
 
         val distance =
             MinecraftClient.getInstance().player?.fishHook?.pos?.distanceTo(Vec3d(instance.x, instance.y, instance.z))
                 ?: return
         if (distance > config.fishing.maximumSoundDistance) return
 
-        val range =
-            if (soundPath == FISH_HOOKED_WATER) config.fishing.waterHookDelayRange
-            else config.fishing.lavaHookDelayRange
         launchFishJob(range)
+    }
+
+    fun onTick(minecraftClient: MinecraftClient) = runBlocking {
+        val config by HypixelQolFabric
+        if (!config.fishing.enabled || !config.fishing.useLegacyDetection) return@runBlocking
+        val fishHook = minecraftClient.player?.fishHook ?: return@runBlocking
+
+        val catching = fishHook.world.getEntitiesByType(
+            EntityType.ARMOR_STAND, fishHook.boundingBox.expand(.0, 0.5, .0)
+        ) {
+            it.displayName?.string == "!!!"
+        }.isNotEmpty()
+
+        if (!catching) return@runBlocking
+
+        var range: RangeValue? = null
+
+        for (i in -1..4) {
+            val block = minecraftClient.world!!.getBlockState(fishHook.blockPos.down(i))
+            if (block.fluidState.fluid == Fluids.WATER || block.fluidState.fluid == Fluids.FLOWING_WATER) {
+                range = config.fishing.waterHookDelayRange
+                break
+            } else if (block.fluidState.fluid == Fluids.LAVA || block.fluidState.fluid == Fluids.FLOWING_LAVA) {
+                range = config.fishing.lavaHookDelayRange
+                break
+            }
+        }
+
+        range ?: let {
+            minecraftClient.inGameHud.chatHud.addMessage(Text.of("Could not find a fluid block!"))
+            return@runBlocking
+        }
+
+        fishMutex.withLock {
+            if (fishJob?.isActive == true) return@withLock
+            fishJob = launchFishJob(range)
+        }
     }
 
 
