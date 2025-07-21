@@ -6,7 +6,9 @@ This makes it a **REQUIRED** dependency (currently version *3.7.1+1.21.5-fabric*
 
 ### Requirements
 - [YACL](https://modrinth.com/mod/yacl), version *3.7.1+1.21.5-fabric* and up
-- Fishing: Enabling the "Fishing Status Holograms" option in the following path: "Skyblock Menu" -> "Settings" -> "Personal" -> "Fishing Settings". ![Screenshot of the setting being enabled](../docs/fabric_instructions.png)
+- Fishing: Enabling the "Fishing Status Holograms" option in the following path: "Skyblock Menu" -> "Settings" -> "Personal" -> "Fishing Settings".
+
+![Screenshot of the setting being enabled](../docs/fabric_instructions.png)
 
 ### Important Information
 This version does have some caveats:
