@@ -1,5 +1,6 @@
 package de.steingaming.hqol.fabric
 
+import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
@@ -43,8 +44,13 @@ class HypixelQolFabric: ModInitializer {
 
         ClientCommandRegistrationCallback.EVENT.register(ClientCommandRegistrationCallback { source, registryAccess ->
             source.register(LiteralArgumentBuilder.literal<FabricClientCommandSource>("hqol").executes {
-                MinecraftClient.getInstance().setScreenAndRender(configManager.config.displayConfigUI(null))
-                0
+                it.source.client.apply {
+                    send {
+                        setScreen(configManager.config.displayConfigUI(currentScreen))
+                    }
+                }
+
+                Command.SINGLE_SUCCESS
             })
         })
     }
