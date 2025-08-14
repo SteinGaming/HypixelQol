@@ -23,7 +23,7 @@ Github Actions automatically updates the jar [in the release tab](https://github
    2. [Clone](https://www.git-scm.com/docs/git-clone) this repository using the [git cli](https://www.git-scm.com/)
 2. Open your Command line inside the FishingQol directory
 3. Run `gradlew.bat build` for Windows and `./gradlew build` for Linux (if you get a permission missing error, run `chmod +x gradlew;`)
-4. After it's done running, the jar will appear in `output/`, which you can then copy to your mods directory
+4. After it's done running, the JARs will appear in `output/`, which you can then copy to your mods directory
 5. FOR NON DEVS ONLY: Delete any remenants after you're done. <br>
    Your home folder will contain a `.gradle`, most likely hidden, folder which should/could contain multiple hundreds of Megabytes. <br>
    You can safely delete it, but if you want to build this project again, it will have to download everything again. <br>
