@@ -71,7 +71,7 @@ class FishingListener {
 
     fun onTick(minecraftClient: MinecraftClient) = runBlocking {
         val config by HypixelQolFabric
-        if (!config.fishing.enabled || !config.fishing.useLegacyDetection) return@runBlocking
+        if (!config.fishing.enabled || config.fishing.useLegacyDetection) return@runBlocking
         val fishHook = minecraftClient.player?.fishHook ?: return@runBlocking
 
         val catching = fishHook.world.getEntitiesByType(
