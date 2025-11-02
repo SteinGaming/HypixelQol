@@ -47,26 +47,30 @@ class FishingListener {
         }
     }
 
-    fun onSound(instance: SoundInstance, soundSet: WeightedSoundSet, range: Float) {
+    fun onSound(instance: SoundInstance, soundSet: WeightedSoundSet, range: Float) = runBlocking onSound@{
         val soundPath = instance.sound.identifier.path
         val config by HypixelQolFabric
 
-        if (!config.fishing.enabled || !config.fishing.useLegacyDetection) return
+        if (!config.fishing.enabled || !config.fishing.useLegacyDetection) return@onSound
 
         val range =
             when (soundPath) {
                 config.fishing.legacyWaterSoundPath -> config.fishing.waterHookDelayRange
                 config.fishing.legacyLavaSoundPath -> config.fishing.lavaHookDelayRange
-                else -> return
+                else -> return@onSound
             }
-        if (soundPath != config.fishing.legacyWaterSoundPath && soundPath != config.fishing.legacyLavaSoundPath) return
+        if (soundPath != config.fishing.legacyWaterSoundPath && soundPath != config.fishing.legacyLavaSoundPath) return@onSound
 
         val distance =
             MinecraftClient.getInstance().player?.fishHook?.pos?.distanceTo(Vec3d(instance.x, instance.y, instance.z))
-                ?: return
-        if (distance > config.fishing.maximumSoundDistance) return
+                ?: return@onSound
+        if (distance > config.fishing.maximumSoundDistance) return@onSound
 
-        launchFishJob(range)
+        fishMutex.withLock {
+            if (fishJob?.isActive == true) return@withLock
+            HypixelQolFabric.LOGGER.debug("Starting job using sound method")
+            fishJob = launchFishJob(range)
+        }
     }
 
     fun onTick(minecraftClient: MinecraftClient) = runBlocking {
@@ -102,6 +106,7 @@ class FishingListener {
 
         fishMutex.withLock {
             if (fishJob?.isActive == true) return@withLock
+            HypixelQolFabric.LOGGER.debug("Starting job using armor stand method")
             fishJob = launchFishJob(range)
         }
     }

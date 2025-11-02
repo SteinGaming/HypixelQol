@@ -9,8 +9,11 @@ data class RangeValue(
     init {
         assert(upperValue > lowerValue)
     }
+    companion object {
+        val rand = Random(System.nanoTime())
+    }
 
     fun getRandomValue(): Int {
-        return Random.nextInt(lowerValue, upperValue)
+        return rand.nextInt(lowerValue, upperValue)
     }
 }
