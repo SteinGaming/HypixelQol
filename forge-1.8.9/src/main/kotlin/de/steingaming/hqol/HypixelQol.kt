@@ -41,7 +41,7 @@ import kotlin.jvm.optionals.getOrNull
 class HypixelQol {
     companion object {
         const val MODID = "hypixelqol"
-        const val MODVERSION = "1.1.1"
+        const val MODVERSION = "2.1.2"
         val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().addSerializationExclusionStrategy(
             object: ExclusionStrategy {
                 override fun shouldSkipField(f: FieldAttributes?): Boolean {
