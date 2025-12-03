@@ -6,8 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import de.steingaming.hqol.annotations.Hidden
-import de.steingaming.hqol.brush.BrushListener
-import de.steingaming.hqol.commands.ApplyBrushConfig
 import de.steingaming.hqol.commands.FishingQolCommand
 import de.steingaming.hqol.commands.GhostQolCommand
 import de.steingaming.hqol.commands.MiscellaneousQolCommand
@@ -111,7 +109,6 @@ class HypixelQol {
         MinecraftForge.EVENT_BUS.register(FishingListener())
         MinecraftForge.EVENT_BUS.register(GhostListener())
         MinecraftForge.EVENT_BUS.register(MiscellaneousListener())
-        MinecraftForge.EVENT_BUS.register(BrushListener())
 
         net.hypixel.modapi.HypixelModAPI.getInstance().createHandler<ClientboundLocationPacket>(
             ClientboundLocationPacket::class.java, ClientboundPacketHandler { packet ->
@@ -135,9 +132,6 @@ class HypixelQol {
         )
         ClientCommandHandler.instance.registerCommand(
             MiscellaneousQolCommand()
-        )
-        ClientCommandHandler.instance.registerCommand(
-            ApplyBrushConfig()
         )
         ClientCommandHandler.instance.registerCommand(
             RiftQolCommand()
