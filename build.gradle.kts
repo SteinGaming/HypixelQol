@@ -14,5 +14,5 @@ allprojects {
     }
 
     version = "2.1.2-SNAPSHOT"
-    group = "eu.steingaming"
+    group = "de.steingaming"
 }
