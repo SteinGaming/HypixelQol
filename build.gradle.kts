@@ -13,6 +13,6 @@ allprojects {
         mavenCentral()
     }
 
-    version = "2.2.0-SNAPSHOT"
+    version = "2.2.1-SNAPSHOT"
     group = "de.steingaming"
 }
