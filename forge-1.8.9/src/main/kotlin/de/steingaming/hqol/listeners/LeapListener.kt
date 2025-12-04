@@ -1,7 +1,9 @@
 package de.steingaming.hqol.listeners
 
+import de.steingaming.hqol.HypixelQol
 import de.steingaming.hqol.Utilities
 import de.steingaming.hqol.Utilities.cleanupColorCodes
+import de.steingaming.hqol.config.subconfigs.FastLeapConfig
 import de.steingaming.hqol.mixins.transformers.AccessorMinecraft
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,16 +31,29 @@ class LeapListener {
         val S3 = AxisAlignedBB(-6.0, 160.0, 123.0, 19.0, 100.0, 50.0)
         val S4 = AxisAlignedBB(17.0, 160.0, 27.0, 90.0, 100.0, 50.0)
 
+        val config: FastLeapConfig
+            get() = HypixelQol.config.fastLeapConfig
+
         val random = Random(System.currentTimeMillis())
 
         var currentLeap: LeapData? = null
         var currentWindow: Window? = null
 
+        fun combineWithConfigOption(other: Boolean): Boolean =
+            config.hideUI && other
+
+
         @JvmStatic
         fun openedWindow(packet: S2DPacketOpenWindow): Boolean {
+            val leap = currentLeap ?: return false
+            if (config.timeout != 0f && System.currentTimeMillis() - leap.time > config.timeout) {
+                Utilities.sendToChat("Timeout reached. Either on cooldown, or ping way too high. Modify your settings!")
+                resetLeapAndWindow()
+                return false
+            }
             val window = Window(packet.windowId, packet.windowTitle.unformattedText.cleanupColorCodes())
             currentWindow = window
-            return window.nameUnformatted == "Spirit Leap"
+            return combineWithConfigOption(window.nameUnformatted == "Spirit Leap" && currentLeap != null)
         }
 
         fun resetLeapAndWindow() {
@@ -51,11 +66,6 @@ class LeapListener {
             val leap = currentLeap ?: return false
             val window = currentWindow ?: return false
 
-            if (System.currentTimeMillis() - leap.time > 500) {
-                Utilities.sendToChat("Timeout reached. Either on cooldown, or ping way too high. Modify your settings!")
-                resetLeapAndWindow()
-                return false
-            }
             val itemStack = packet.func_149174_e()
             val slot = packet.func_149173_d()
             val windowId = packet.func_149175_c()
@@ -75,14 +85,14 @@ class LeapListener {
 
             resetLeapAndWindow()
             scope.launch {
-                delay(random.nextLong(50, 100))
+                delay(random.nextLong(config.timings.lower.toLong(), config.timings.upper.toLong()))
                 Minecraft.getMinecraft().netHandler.networkManager.sendPacket(
                     C0EPacketClickWindow(
                         windowId, slot, 0, 0, null, 0
                     )
                 )
             }
-            return true
+            return combineWithConfigOption(true)
         }
     }
 
@@ -106,13 +116,16 @@ class LeapListener {
     fun appendFastLeap(): Boolean {
         val player = Minecraft.getMinecraft().thePlayer
         val pos = player.positionVector
+
+        val classes = config.classes
         val className: String = when {
-            S1.isVecInside(pos) -> "archer"
-            S2.isVecInside(pos) -> "archer"
-            S3.isVecInside(pos) -> "mage"
-            S4.isVecInside(pos) -> "healer"
-            else -> "tank"
-        } ?: return false
+            S1.isVecInside(pos) -> classes.S1
+            S2.isVecInside(pos) -> classes.S2
+            S3.isVecInside(pos) -> classes.S3
+            S4.isVecInside(pos) -> classes.S4
+            else -> classes.default
+        }
+        if (className.trim() == "") return false
         val playerName = findPlayerByClassName(className) ?: let {
             Utilities.sendToChat("Couldn't find a player with the class \"$className\"")
             return false
