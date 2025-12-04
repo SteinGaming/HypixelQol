@@ -6,7 +6,6 @@ import de.steingaming.hqol.HypixelQol.Companion.scope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
-import net.minecraft.client.settings.KeyBinding
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.sound.SoundEvent
@@ -15,14 +14,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 import kotlin.random.Random
 
 class FishingListener {
-    private var ticks           = 0
     private var ticksNotFishing = 0
     private var ticksFishing    = 0
-
-    private var lastMovement: Pair<Float, Float>? = null
-    private var post = false
-
-
 
     @SubscribeEvent
     fun onSound(event: SoundEvent.SoundSourceEvent) {
@@ -31,20 +24,21 @@ class FishingListener {
             return
         if (Minecraft.getMinecraft().thePlayer.fishEntity.positionVector.distanceTo(
                 Vec3(event.sound.xPosF.toDouble(), event.sound.yPosF.toDouble(), event.sound.zPosF.toDouble())
-            ) > config.properties.soundDistanceToRod
+            ) > config.soundDistanceToRod
         ) return
-        if (ticksFishing < config.properties.minWaitTimeTicks)
+        if (ticksFishing < config.minWaitTimeTicks)
             return
         ticksFishing = 0
         scope.launch {
-            val (min, max) = if (event.name == "game.player.swim.splash") config.lavaPreCatchDelay else config.waterPreCatchDelay
+            val timings = config.timings
+            val (min, max) = if (event.name == "game.player.swim.splash") timings.lavaPreCatchDelay else timings.waterPreCatchDelay
             delay(Random.nextLong(min, max))
             Minecraft.getMinecraft().playerController.sendUseItem(
                 Minecraft.getMinecraft().thePlayer,
                 Minecraft.getMinecraft().theWorld,
                 Minecraft.getMinecraft().thePlayer.heldItem
             )
-            val (postMin, postMax) = config.castRodDelay
+            val (postMin, postMax) = timings.castRodDelay
             delay(Random.nextLong(postMin, postMax))
             Minecraft.getMinecraft().playerController.sendUseItem(
                 Minecraft.getMinecraft().thePlayer,
@@ -54,16 +48,6 @@ class FishingListener {
         }
     }
 
-
-    private var randomMovementWaitTicks = HypixelQol.config.fishingConfig.properties.randomMovementTicks.takeIf {
-        it.min < it.max
-    }?.let {
-        Random.nextLong(
-            it.min,
-            it.max
-        )
-    }
-
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || Minecraft.getMinecraft().thePlayer == null) return
@@ -71,12 +55,12 @@ class FishingListener {
 
         if (!config.enabled)
             return
-        if (config.properties.inactivityDisableTicks != 0L)
-            if (Minecraft.getMinecraft().thePlayer.fishEntity == null && ticksNotFishing++ > config.properties.inactivityDisableTicks) {
+        if (config.inactivityDisableTicks != 0.0f)
+            if (Minecraft.getMinecraft().thePlayer.fishEntity == null && ticksNotFishing++ > config.inactivityDisableTicks) {
                 ticksNotFishing = 0
                 Minecraft.getMinecraft().thePlayer.addChatMessage(
                     ChatComponentText(
-                        "§cFishingQol has been automatically disabled due to you not fishing for ${config.properties.inactivityDisableTicks / 20} seconds"
+                        "§cFishingQol has been automatically disabled due to you not fishing for ${config.inactivityDisableTicks / 20} seconds"
                     )
                 )
                 config.enabled = false
@@ -86,41 +70,6 @@ class FishingListener {
 
         if (Minecraft.getMinecraft().thePlayer.fishEntity != null)
             ticksFishing++
-
-        if (post) {
-            post = false
-            KeyBinding.setKeyBindState(
-                Minecraft.getMinecraft().gameSettings.keyBindJump.keyCode, false
-            )
-        }
-
-        if (randomMovementWaitTicks == null && config.properties.randomMovementTicks.let { it.min < it.max  })
-            randomMovementWaitTicks = Random.nextLong(
-                config.properties.randomMovementTicks.min,
-                config.properties.randomMovementTicks.max
-            )
-        if (Minecraft.getMinecraft().thePlayer.fishEntity != null && config.properties.randomMovementTicks.min != 0L && randomMovementWaitTicks != null && ticks++ > randomMovementWaitTicks!!) {
-            ticks = 0
-            randomMovementWaitTicks = Random.nextLong(
-                config.properties.randomMovementTicks.min,
-                config.properties.randomMovementTicks.max
-            )
-            if (!Minecraft.getMinecraft().thePlayer.onGround) return
-            KeyBinding.setKeyBindState(
-                Minecraft.getMinecraft().gameSettings.keyBindJump.keyCode, true
-            )
-            post = true
-            val (strafe, forward) = lastMovement?.let {
-                lastMovement = null
-                -it.first to -it.second
-            } ?: (Random.nextDouble(-0.6, 0.6).toFloat() to
-                    Random.nextDouble(-0.6, 0.6).toFloat()).also {
-                lastMovement = it
-            }
-            Minecraft.getMinecraft().thePlayer.moveEntityWithHeading(
-                strafe, forward
-            )
-        }
     }
 
 }

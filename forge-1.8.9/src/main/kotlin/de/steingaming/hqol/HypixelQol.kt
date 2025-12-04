@@ -1,14 +1,9 @@
 package de.steingaming.hqol
 
-import com.google.gson.ExclusionStrategy
-import com.google.gson.FieldAttributes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import de.steingaming.hqol.annotations.Hidden
-import de.steingaming.hqol.commands.FishingQolCommand
-import de.steingaming.hqol.commands.GhostQolCommand
-import de.steingaming.hqol.commands.MiscellaneousQolCommand
+import de.steingaming.hqol.commands.HypixelQolCommand
 import de.steingaming.hqol.commands.RiftQolCommand
 import de.steingaming.hqol.config.HypixelQolConfig
 import de.steingaming.hqol.listeners.FishingListener
@@ -40,16 +35,8 @@ class HypixelQol {
     companion object {
         const val MODID = "hypixelqol"
         const val MODVERSION = "2.1.2"
-        val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().addSerializationExclusionStrategy(
-            object: ExclusionStrategy {
-                override fun shouldSkipField(f: FieldAttributes?): Boolean {
-                    println(f?.name)
-                    return f?.getAnnotation(Hidden::class.java) != null || f?.declaredClass?.getDeclaredAnnotation(Hidden::class.java) != null
-                }
-
-                override fun shouldSkipClass(clazz: Class<*>?): Boolean = clazz == HypixelQolConfig.Properties::class.java
-            }
-        ).excludeFieldsWithModifiers(Modifier.TRANSIENT).create()
+        val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping()
+            .excludeFieldsWithModifiers(Modifier.TRANSIENT).create()
         lateinit var instance: HypixelQol
             private set
 
@@ -122,16 +109,10 @@ class HypixelQol {
         ClientRegistry.registerKeyBinding(ghost)
 
         ClientCommandHandler.instance.registerCommand(
-            FishingQolCommand()
+            HypixelQolCommand()
         )
         ClientCommandHandler.instance.registerCommand(
             SpassHaben()
-        )
-        ClientCommandHandler.instance.registerCommand(
-            GhostQolCommand()
-        )
-        ClientCommandHandler.instance.registerCommand(
-            MiscellaneousQolCommand()
         )
         ClientCommandHandler.instance.registerCommand(
             RiftQolCommand()

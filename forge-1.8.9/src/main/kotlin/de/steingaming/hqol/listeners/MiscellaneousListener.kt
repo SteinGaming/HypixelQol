@@ -15,8 +15,8 @@ class MiscellaneousListener {
 
     private val terminatorTicks: Long?
         get() = HypixelQol.config.miscConfig.terminatorCPS.let {
-            if (it == 0L) null
-            else (20 / it) + randomDelay
+            if (it == 0f) null
+            else ((20f / it) + randomDelay).toLong()
         }
 
     private var randomDelay: Long = Random.nextLong(0, 2)
@@ -27,7 +27,7 @@ class MiscellaneousListener {
 
     @SubscribeEvent
     fun termTickListener(e: TickEvent.ClientTickEvent) {
-        if (HypixelQol.config.miscConfig.terminatorCPS == 0L) return
+        if (HypixelQol.config.miscConfig.terminatorCPS == 0f) return
         if (e.phase != TickEvent.Phase.START || Minecraft.getMinecraft()?.thePlayer == null || Minecraft.getMinecraft().isGamePaused || Minecraft.getMinecraft().currentScreen != null) return
 
 

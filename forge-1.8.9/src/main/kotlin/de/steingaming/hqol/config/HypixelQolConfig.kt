@@ -1,89 +1,53 @@
 package de.steingaming.hqol.config
 
-import de.steingaming.hqol.annotations.Hidden
+import com.google.gson.annotations.Expose
+import de.steingaming.hqol.HypixelQol
 import de.steingaming.hqol.config.subconfigs.FishingConfig
 import de.steingaming.hqol.config.subconfigs.GhostConfig
 import de.steingaming.hqol.config.subconfigs.MiscellaneousConfig
-import java.lang.reflect.Field
+import io.github.notenoughupdates.moulconfig.Config
+import io.github.notenoughupdates.moulconfig.annotations.Category
+import io.github.notenoughupdates.moulconfig.common.IMinecraft
+import io.github.notenoughupdates.moulconfig.gui.MoulConfigEditor
+import io.github.notenoughupdates.moulconfig.processor.ConfigProcessorDriver
+import io.github.notenoughupdates.moulconfig.processor.MoulConfigProcessor
+import net.minecraft.client.Minecraft
 
-data class HypixelQolConfig(
-    val fishingConfig: FishingConfig = FishingConfig(),
-    val ghostConfig: GhostConfig = GhostConfig(),
-    val miscConfig: MiscellaneousConfig = MiscellaneousConfig()
-) {
+class HypixelQolConfig : Config() {
+    init {
+        saveRunnables.add {
+            HypixelQol.saveConfig()
+        }
+    }
+
     class Range(val min: Long, val max: Long) {
         override fun toString(): String = "$min..$max"
+        operator fun component1(): Long = min
+        operator fun component2(): Long = max
     }
 
-    class Properties<T>(
-        @Hidden @Transient val instance: () -> T,
-        @Hidden @Transient val newInstance: () -> T,
-    ) {
+    fun openConfigScreen() {
+        val processor = MoulConfigProcessor.withDefaults<HypixelQolConfig>(this@HypixelQolConfig)
+        val driver = ConfigProcessorDriver(processor)
+        //driver.checkExpose = true
+        driver.processConfig(this@HypixelQolConfig)
 
-        private val nameToField: Map<String, Field> =
-            instance()!!::class.java.declaredFields.filter { it.type != Properties::class.java }.associate { it.name.lowercase() to it.also { f -> f.isAccessible = true } }
-
-        class InvalidNameException : Exception()
-        class InvalidValueException(val instead: String) : Exception()
-
-        fun toTableArray(): Array<Array<String>> {
-            return nameToField.map {
-                arrayOf(it.key, it.value.get(instance()).toString())
-            }.toTypedArray()
-        }
-
-        fun namesList(): Set<String> =
-            nameToField.keys
-
-
-        fun keyValueSet(): Map<String, Any> =
-            nameToField.mapValues {
-                it.value.get(instance())
-            }
-
-        fun reset(name: String) {
-            nameToField[name.lowercase()]?.let {
-                it.set(instance(), it.get(newInstance()))
-                return
-            }
-            throw InvalidNameException()
-        }
-
-        private val defaultParser: Map<Class<*>, (String) -> Any> = mapOf(
-            Boolean::class.java to {
-                it.lowercase().toBooleanStrictOrNull() ?:
-                    throw InvalidValueException("Should be \"true\" or \"false\"")
-            },
-            Int::class.java to {
-                it.toIntOrNull() ?:
-                    throw InvalidValueException("Should be an integer (number) instead")
-            },
-            Long::class.java to {
-                it.toLongOrNull() ?:
-                throw InvalidValueException("Should be an float (number) instead")
-            },
-            Double::class.java to {
-                it.toDoubleOrNull() ?:
-                throw InvalidValueException("Should be an double (number with decibel points) instead")
-            },
-            Range::class.java to {
-                val (min, max) = it.split("").takeIf { l -> l.size == 2 }?.let { l ->
-                    (l.getOrNull(0)?.toLongOrNull() ?: return@let null) to
-                            (l.getOrNull(1)?.toLongOrNull() ?: return@let null)
-                } ?: throw InvalidValueException("Should be number range, example: \"min..max\"")
-                Range(min, max)
-            }
-        )
-        /**
-         * Uses type to detect how to parse the value
-         * For custom classes, override this function and call super.set() afterward.
-         */
-        fun set(name: String, value: String) {
-            nameToField[name.lowercase()]?.let {
-                it.set(instance(), (defaultParser[it.type] ?: throw InternalError("No valid parser found.")).invoke(value))
-                return
-            }
-            throw InvalidNameException()
-        }
+        val editor = MoulConfigEditor(processor)
+        Minecraft.getMinecraft().displayGuiScreen(null)
+        IMinecraft.INSTANCE.openWrappedScreen(editor)
     }
+
+
+    @Expose
+    @Category(name = "Fishing", desc = "Set settings for the fishing feature")
+    var fishingConfig: FishingConfig = FishingConfig()
+
+    @Expose
+    @Category(name = "Ghost Blocks", desc = "Modify the ghost block feature")
+    var ghostConfig: GhostConfig = GhostConfig()
+
+    @Expose
+    @Category(name = "Miscellaneous", desc = "Other properties (minor features most likely)")
+    var miscConfig: MiscellaneousConfig = MiscellaneousConfig()
+
 }

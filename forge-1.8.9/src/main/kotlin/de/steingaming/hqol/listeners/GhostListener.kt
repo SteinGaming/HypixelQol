@@ -14,6 +14,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 class GhostListener {
+    companion object {
+        val TRIM_PATTERN = Regex("[^0-9,]")
+    }
     @SubscribeEvent
     fun onPunch(event: PlayerInteractEvent) {
         if ((!HypixelQol.instance.ghostEnabled && Item.getIdFromItem(
@@ -22,9 +25,11 @@ class GhostListener {
             event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK || event.entityPlayer != Minecraft.getMinecraft().thePlayer
         ) return
 
+        val ignoreBlockList = config.ghostConfig.ignoreBlockList.trim().replace(TRIM_PATTERN, "")
+            .split(",").mapNotNull { it.toIntOrNull() }
         if (Block.getIdFromBlock(
                 Minecraft.getMinecraft().theWorld?.getBlockState(event.pos)?.block ?: return
-            ) in config.ghostConfig.ignoreBlockList
+            ) in ignoreBlockList
         )
             return
 
@@ -39,7 +44,7 @@ class GhostListener {
                     val block = event.pos.direction(direction, i) ?: return@launch
                     if (Block.getIdFromBlock(
                             Minecraft.getMinecraft().theWorld?.getBlockState(block)?.block ?: return@launch
-                        ) in config.ghostConfig.ignoreBlockList
+                        ) in ignoreBlockList
                     ) continue
                     // Check if block exists, else break
                     if (Minecraft.getMinecraft().theWorld.getBlockState(block).block.material == Material.air) break

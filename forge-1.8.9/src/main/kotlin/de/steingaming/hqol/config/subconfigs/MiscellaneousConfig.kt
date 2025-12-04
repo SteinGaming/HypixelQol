@@ -1,14 +1,10 @@
 package de.steingaming.hqol.config.subconfigs
 
-import com.google.gson.annotations.Expose
-import de.steingaming.hqol.annotations.Hidden
-import de.steingaming.hqol.config.HypixelQolConfig
+import io.github.notenoughupdates.moulconfig.annotations.ConfigEditorSlider
+import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 
-data class MiscellaneousConfig(
-    val terminatorCPS: Long = 0
-) {
-    @Hidden
-    @Transient
-    @Expose(serialize = false, deserialize = false)
-    val properties = HypixelQolConfig.Properties({ this }, { MiscellaneousConfig() })
+class MiscellaneousConfig {
+    @ConfigOption(name = "Terminator CPS", desc = "§cNO IDEA IF THIS STILL WORKS, PROCEED WITH CAUTION\nHolding a term should be enough")
+    @ConfigEditorSlider(minValue = 0.0f, maxValue = 20.0f, minStep = 1f)
+    var terminatorCPS: Float = 0f
 }

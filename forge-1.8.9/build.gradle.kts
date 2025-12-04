@@ -26,6 +26,7 @@ repositories {
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     maven("https://jitpack.io")
     maven("https://repo.hypixel.net/repository/Hypixel/")
+    maven("https://maven.notenoughupdates.org/releases/")
 }
 
 val shadowImplementation by configurations.creating
@@ -45,6 +46,7 @@ dependencies {
     annotationProcessor("com.google.guava:guava:17.0")
 
     shadowImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    shadowImplementation("org.notenoughupdates.moulconfig:legacy:4.2.0-beta")
 }
 tasks.withType(org.gradle.jvm.tasks.Jar::class) {
     manifest.attributes.run {
@@ -70,8 +72,21 @@ val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
 }
 
 tasks.named<ShadowJar>("shadowJar") {
+    // Fix IMinecraft service
+    mergeServiceFiles()
+    doFirst {
+        val genServicesDir = File(buildDir, "generated-resources/services/META-INF/services")
+        genServicesDir.mkdirs()
+        File(genServicesDir, "de.steingaming.hqol.deps.moulconfig.common.IMinecraft").writeText("de.steingaming.hqol.deps.moulconfig.internal.ForgeMinecraft\n")
+    }
+    from(File(buildDir, "generated-resources/services")) {
+        into("")
+    }
+
+
     archiveClassifier.set("dep-dev")
     configurations.set(mutableListOf(project.configurations.getByName("shadowImplementation"), project.configurations.getByName("shadowApi")))
+    relocate("io.github.notenoughupdates.moulconfig", "de.steingaming.hqol.deps.moulconfig")
 }
 tasks.processResources {
     filesMatching("mcmod.info") {
