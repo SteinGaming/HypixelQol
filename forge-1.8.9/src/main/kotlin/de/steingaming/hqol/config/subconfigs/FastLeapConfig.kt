@@ -38,12 +38,11 @@ class FastLeapConfig {
         @ConfigEditorInfoText(infoTitle = "All class names in lowercase")
         @ConfigOption(name = "How to use", desc = "Leave empty to disable")
         val _text = null
+
         @Expose
         @ConfigOption(name = "S1", desc = "Which class to leap to when in S1")
         @ConfigEditorText
         var S1: String = ""
-
-
         @Expose
         @ConfigOption(name = "S2", desc = "Which class to leap to when in S2")
         @ConfigEditorText
@@ -57,7 +56,7 @@ class FastLeapConfig {
         @ConfigEditorText
         var S4: String = ""
         @Expose
-        @ConfigOption(name = "S1", desc = "Which class to leap to when in no section")
+        @ConfigOption(name = "Default", desc = "Which class to leap to when in no section")
         @ConfigEditorText
         var default: String = ""
     }
