@@ -8,6 +8,7 @@ import de.steingaming.hqol.commands.RiftQolCommand
 import de.steingaming.hqol.config.HypixelQolConfig
 import de.steingaming.hqol.listeners.FishingListener
 import de.steingaming.hqol.listeners.GhostListener
+import de.steingaming.hqol.listeners.LeapListener
 import de.steingaming.hqol.listeners.MiscellaneousListener
 import de.steingaming.hqol.listeners.RiftListener
 import kotlinx.coroutines.*
@@ -95,6 +96,7 @@ class HypixelQol {
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(FishingListener())
         MinecraftForge.EVENT_BUS.register(GhostListener())
+        MinecraftForge.EVENT_BUS.register(LeapListener())
         MinecraftForge.EVENT_BUS.register(MiscellaneousListener())
 
         net.hypixel.modapi.HypixelModAPI.getInstance().createHandler<ClientboundLocationPacket>(

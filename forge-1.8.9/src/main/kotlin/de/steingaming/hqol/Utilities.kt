@@ -1,5 +1,8 @@
 package de.steingaming.hqol
 
+import net.minecraft.client.Minecraft
+import net.minecraft.util.ChatComponentText
+
 object Utilities {
     fun options(args: Array<out String>): (options: Collection<String>,
                                        input: String?,
@@ -24,5 +27,12 @@ object Utilities {
 
     fun String.cleanupColorCodes(): String {
         return this.replace("[\u00a7&][0-9a-fk-or]".toRegex(), "")
+    }
+
+    fun sendToChat(string: String) {
+        println(string)
+        Minecraft.getMinecraft()?.ingameGUI?.chatGUI?.printChatMessage(
+            ChatComponentText(string)
+        )
     }
 }
