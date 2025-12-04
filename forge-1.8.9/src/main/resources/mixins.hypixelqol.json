@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AccessorMinecraft",
-    "AccessorEventBus"
+    "AccessorEventBus",
+    "InjectNetPlayClientHandler"
   ]
 }
