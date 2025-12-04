@@ -28,6 +28,11 @@ class FastLeapConfig {
     @ConfigOption(name = "Hide UI", desc = "Hide the Spirit Leap menu from the user\n§cUSE AT OWN RISK")
     @ConfigEditorBoolean
     var hideUI: Boolean = false
+
+    @Expose
+    @ConfigOption(name = "Play pling when leaping", desc = "QoL feature")
+    @ConfigEditorBoolean
+    var playNoise: Boolean = true
     class FastLeapClasses {
         @Expose
         @ConfigEditorInfoText(infoTitle = "All class names in lowercase")

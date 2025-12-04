@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
+import net.minecraft.client.audio.ISound
+import net.minecraft.client.audio.PositionedSound
 import net.minecraft.network.play.client.C0DPacketCloseWindow
 import net.minecraft.network.play.client.C0EPacketClickWindow
 import net.minecraft.network.play.server.S2DPacketOpenWindow
@@ -85,12 +87,18 @@ class LeapListener {
 
             resetLeapAndWindow()
             scope.launch {
+                val mc = Minecraft.getMinecraft()
+                val player = mc.thePlayer
                 delay(random.nextLong(config.timings.lower.toLong(), config.timings.upper.toLong()))
-                Minecraft.getMinecraft().netHandler.networkManager.sendPacket(
+                mc.netHandler.networkManager.sendPacket(
                     C0EPacketClickWindow(
                         windowId, slot, 0, 0, null, 0
                     )
                 )
+                if (config.playNoise)
+                    mc.theWorld.playSound(
+                        player.posX, player.posY, player.posZ, "note.pling", 1f, 1f, false
+                    )
             }
             return combineWithConfigOption(true)
         }
