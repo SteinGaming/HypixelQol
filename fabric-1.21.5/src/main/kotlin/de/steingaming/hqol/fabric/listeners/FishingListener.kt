@@ -32,15 +32,15 @@ class FishingListener {
         var fishJob: Job? = null
 
         @JvmStatic
-        fun launchFishJob(range: RangeValue): Job = COROUTINE_SCOPE.launch {
+        fun launchFishJob(range: RangeValue): Job = GlobalScope.launch {
             val config by HypixelQolFabric
             val minecraftClientInvoker = MinecraftClient.getInstance() as MinecraftClientInvoker
 
             delay(range.getRandomValue().toLong())
-            minecraftClientInvoker.doItemUse_hqol()
+            MinecraftClient.getInstance().execute { minecraftClientInvoker.doItemUse_hqol() }
 
             delay(config.fishing.rethrowHookDelay.getRandomValue().toLong())
-            minecraftClientInvoker.doItemUse_hqol()
+            MinecraftClient.getInstance().execute { minecraftClientInvoker.doItemUse_hqol() }
 
             // Post delay
             delay(500)
