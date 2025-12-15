@@ -14,9 +14,9 @@ import net.minecraft.text.Text
 data class Fishing(
     var enabled: Boolean = false,
     var useLegacyDetection: Boolean = false,
-    var waterHookDelayRange: RangeValue = RangeValue(50, 200),
-    var lavaHookDelayRange: RangeValue = RangeValue(50, 200),
-    var rethrowHookDelay: RangeValue = RangeValue(50, 125),
+    var waterHookDelayRange: RangeValue = RangeValue(150, 250),
+    var lavaHookDelayRange: RangeValue = RangeValue(150, 250),
+    var rethrowHookDelay: RangeValue = RangeValue(100, 150),
     var maximumSoundDistance: Double = 0.1,
     var legacyWaterSoundPath: String = "random/splash",
     var legacyLavaSoundPath: String = "game/player/swim/splash",
