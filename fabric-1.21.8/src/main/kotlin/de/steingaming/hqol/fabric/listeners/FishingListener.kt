@@ -48,7 +48,7 @@ class FishingListener {
     }
 
     fun onSound(instance: SoundInstance, soundSet: WeightedSoundSet, range: Float) = runBlocking onSound@{
-        val soundPath = instance.sound.identifier.path
+        val soundPath = instance.sound?.identifier?.path ?: return@onSound
         val config by HypixelQolFabric
 
         if (!config.fishing.enabled || !config.fishing.useLegacyDetection) return@onSound
