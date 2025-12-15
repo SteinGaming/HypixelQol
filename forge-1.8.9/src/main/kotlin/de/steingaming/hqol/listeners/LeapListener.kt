@@ -27,14 +27,20 @@ class LeapListener {
 
     companion object {
         val scope = CoroutineScope(Dispatchers.Default)
-        val LEAP_REGEX = Regex("(Infinileap|Spirit Leap)")
+        val LEAP_REGEX = Regex("(Infini[lL]eap|Spirit Leap)")
         val S1 = AxisAlignedBB(113.0, 160.0, 48.0, 89.0, 100.0, 122.0)
         val S2 = AxisAlignedBB(91.0, 160.0, 145.0, 19.0, 100.0, 121.0)
         val S3 = AxisAlignedBB(-6.0, 160.0, 123.0, 19.0, 100.0, 50.0)
         val S4 = AxisAlignedBB(17.0, 160.0, 27.0, 90.0, 100.0, 50.0)
+        val S4_CORE = AxisAlignedBB(65.0, 160.0, 27.0, 43.0, 100.0, 96.0)
 
         val config: FastLeapConfig
             get() = HypixelQol.config.fastLeapConfig
+
+        fun debugMessage(msg: String) {
+            if (config.debug)
+                Utilities.sendToChat(msg)
+        }
 
         val random = Random(System.currentTimeMillis())
 
@@ -55,10 +61,12 @@ class LeapListener {
             }
             val window = Window(packet.windowId, packet.windowTitle.unformattedText.cleanupColorCodes())
             currentWindow = window
+            debugMessage("Is Spirit Leap with queued? ${window.nameUnformatted == "Spirit Leap" && currentLeap != null}")
             return combineWithConfigOption(window.nameUnformatted == "Spirit Leap" && currentLeap != null)
         }
 
         fun resetLeapAndWindow() {
+            debugMessage("Resetting leap and window to null")
             currentLeap = null
             currentWindow = null
         }
@@ -85,20 +93,26 @@ class LeapListener {
             if (itemStack.displayName.cleanupColorCodes().lowercase() != leap.name)
                 return false
 
+            debugMessage("${itemStack.displayName.cleanupColorCodes().lowercase()} matched, resetting and pressing $slot for $windowId")
+
             resetLeapAndWindow()
             scope.launch {
                 val mc = Minecraft.getMinecraft()
                 val player = mc.thePlayer
-                delay(random.nextLong(config.timings.lower.toLong(), config.timings.upper.toLong()))
+                delay(random.nextLong(config.timings.lower.toLong(), config.timings.upper.toLong()).also { debugMessage("Waiting $it ms") })
+                debugMessage("Sending Packet")
+                debugMessage("Window ID: ${player.openContainer?.windowId}; Item name for slot: ${player.openContainer?.getSlot(slot)?.stack?.displayName?.cleanupColorCodes()?.lowercase()}")
                 mc.netHandler.networkManager.sendPacket(
                     C0EPacketClickWindow(
                         windowId, slot, 0, 0, null, 0
                     )
                 )
-                if (config.playNoise)
+                if (config.playNoise) {
+                    debugMessage("Playing sound")
                     mc.theWorld.playSound(
                         player.posX, player.posY, player.posZ, "note.pling", 1f, 1f, false
                     )
+                }
             }
             return combineWithConfigOption(true)
         }
@@ -117,6 +131,7 @@ class LeapListener {
         }.firstOrNull {
             it != Minecraft.getMinecraft().thePlayer.gameProfile.name.lowercase()
         } // TODO check duplicates classes
+        debugMessage("findPlayerByClassName res: $playerName")
 
         return playerName
     }
@@ -126,18 +141,28 @@ class LeapListener {
         val pos = player.positionVector
 
         val classes = config.classes
+        debugMessage("Which sector? ${
+            when {
+                S1.isVecInside(pos) -> "S1"
+                S2.isVecInside(pos) -> "S2"
+                S3.isVecInside(pos) -> "S3"
+                S4.isVecInside(pos) || S4_CORE.isVecInside(pos) -> "S4"
+                else -> "None, defaulting"
+            }
+        }")
         val className: String = when {
             S1.isVecInside(pos) -> classes.S1
             S2.isVecInside(pos) -> classes.S2
             S3.isVecInside(pos) -> classes.S3
-            S4.isVecInside(pos) -> classes.S4
+            S4.isVecInside(pos) || S4_CORE.isVecInside(pos) -> classes.S4
             else -> classes.default
         }
-        if (className.trim() == "") return false
+        if (className.trim() == "") return false.also { debugMessage("No class set, returning false") }
         val playerName = findPlayerByClassName(className) ?: let {
             Utilities.sendToChat("Couldn't find a player with the class \"$className\"")
             return false
         }
+        debugMessage("Match found: $playerName")
         currentLeap = LeapData(playerName)
         return true
     }
@@ -150,7 +175,9 @@ class LeapListener {
         val name = player.heldItem?.displayName?.cleanupColorCodes() ?: return
         if (!LEAP_REGEX.matches(name)) return
         e.isCanceled = true
-        if (appendFastLeap())
-                (Minecraft.getMinecraft() as AccessorMinecraft).rightClickMouse_hqol()
+        if (appendFastLeap()) {
+            debugMessage("Emulating right click")
+            (Minecraft.getMinecraft() as AccessorMinecraft).rightClickMouse_hqol()
+        }
     }
 }

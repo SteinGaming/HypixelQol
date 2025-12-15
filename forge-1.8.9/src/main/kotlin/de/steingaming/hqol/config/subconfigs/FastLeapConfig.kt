@@ -71,4 +71,9 @@ class FastLeapConfig {
         @ConfigEditorSlider(minValue = 0f, maxValue = 1000f, minStep = 1f)
         var upper: Float = 100f
     }
+
+    @Expose
+    @ConfigOption(name = "Debug", desc = "Easily find out issues (probably) (fuck you sof)")
+    @ConfigEditorBoolean
+    var debug: Boolean = false
 }
