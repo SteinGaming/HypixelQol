@@ -35,4 +35,12 @@ object Utilities {
             ChatComponentText(string)
         )
     }
+
+    fun sendRightClick() {
+        Minecraft.getMinecraft().playerController.sendUseItem(
+            Minecraft.getMinecraft().thePlayer,
+            Minecraft.getMinecraft().theWorld,
+            Minecraft.getMinecraft().thePlayer.heldItem
+        )
+    }
 }

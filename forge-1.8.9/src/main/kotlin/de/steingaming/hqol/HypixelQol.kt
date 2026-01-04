@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken
 import de.steingaming.hqol.commands.HypixelQolCommand
 import de.steingaming.hqol.commands.RiftQolCommand
 import de.steingaming.hqol.config.HypixelQolConfig
+import de.steingaming.hqol.listeners.DungeonListener
 import de.steingaming.hqol.listeners.FishingListener
 import de.steingaming.hqol.listeners.GhostListener
 import de.steingaming.hqol.listeners.LeapListener
@@ -94,6 +95,7 @@ class HypixelQol {
         }
 
         MinecraftForge.EVENT_BUS.register(this)
+        MinecraftForge.EVENT_BUS.register(DungeonListener())
         MinecraftForge.EVENT_BUS.register(FishingListener())
         MinecraftForge.EVENT_BUS.register(GhostListener())
         MinecraftForge.EVENT_BUS.register(LeapListener())

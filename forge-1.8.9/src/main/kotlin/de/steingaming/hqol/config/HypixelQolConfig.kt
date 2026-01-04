@@ -2,6 +2,7 @@ package de.steingaming.hqol.config
 
 import com.google.gson.annotations.Expose
 import de.steingaming.hqol.HypixelQol
+import de.steingaming.hqol.config.subconfigs.DungeonConfig
 import de.steingaming.hqol.config.subconfigs.FastLeapConfig
 import de.steingaming.hqol.config.subconfigs.FishingConfig
 import de.steingaming.hqol.config.subconfigs.GhostConfig
@@ -50,6 +51,10 @@ class HypixelQolConfig : Config() {
     @Expose
     @Category(name = "Miscellaneous", desc = "Other properties (minor features most likely)")
     var miscConfig: MiscellaneousConfig = MiscellaneousConfig()
+
+    @Expose
+    @Category(name = "Dungeon Config", desc = "Generic Category for everything dungeon related (smaller features only)")
+    var dungeonConfig: DungeonConfig = DungeonConfig()
 
     @Expose
     @Category(name = "Fast Leap", desc = "Left-click a (Infini-)Leap to teleport to you preferred class")

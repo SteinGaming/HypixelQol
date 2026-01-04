@@ -3,6 +3,7 @@ package de.steingaming.hqol.listeners
 import de.steingaming.hqol.HypixelQol
 import de.steingaming.hqol.HypixelQol.Companion.saveConfig
 import de.steingaming.hqol.HypixelQol.Companion.scope
+import de.steingaming.hqol.Utilities.sendRightClick
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
@@ -33,18 +34,10 @@ class FishingListener {
             val timings = config.timings
             val (min, max) = if (event.name == "game.player.swim.splash") timings.lavaPreCatchDelay else timings.waterPreCatchDelay
             delay(Random.nextLong(min, max))
-            Minecraft.getMinecraft().playerController.sendUseItem(
-                Minecraft.getMinecraft().thePlayer,
-                Minecraft.getMinecraft().theWorld,
-                Minecraft.getMinecraft().thePlayer.heldItem
-            )
+            sendRightClick()
             val (postMin, postMax) = timings.castRodDelay
             delay(Random.nextLong(postMin, postMax))
-            Minecraft.getMinecraft().playerController.sendUseItem(
-                Minecraft.getMinecraft().thePlayer,
-                Minecraft.getMinecraft().theWorld,
-                Minecraft.getMinecraft().thePlayer.heldItem
-            )
+            sendRightClick()
         }
     }
 
