@@ -10,6 +10,7 @@ data class RangeValue(
         assert(upperValue > lowerValue)
     }
     companion object {
+        @Transient
         val rand = Random(System.nanoTime())
     }
 
