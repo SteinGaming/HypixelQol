@@ -1,7 +1,7 @@
 package de.steingaming.hqol.fabric.listeners
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
-import de.steingaming.hqol.fabric.config.controller.range.RangeValue
+import de.steingaming.hqol.fabric.config.Config.Range
 import de.steingaming.hqol.fabric.mixins.MinecraftClientInvoker
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
@@ -32,14 +32,14 @@ class FishingListener {
         var fishJob: Job? = null
 
         @JvmStatic
-        fun launchFishJob(range: RangeValue): Job = GlobalScope.launch {
+        fun launchFishJob(range: Range): Job = GlobalScope.launch {
             val config by HypixelQolFabric
             val minecraftClientInvoker = MinecraftClient.getInstance() as MinecraftClientInvoker
 
-            delay(range.getRandomValue().toLong())
+            delay(range.getRandomValue())
             MinecraftClient.getInstance().execute { minecraftClientInvoker.doItemUse_hqol() }
 
-            delay(config.fishing.rethrowHookDelay.getRandomValue().toLong())
+            delay(config.fishing.timings.castRodDelay.getRandomValue())
             MinecraftClient.getInstance().execute { minecraftClientInvoker.doItemUse_hqol() }
 
             // Post delay
@@ -53,18 +53,19 @@ class FishingListener {
 
         if (!config.fishing.enabled || !config.fishing.useLegacyDetection) return@onSound
 
+        val legacyOptions = config.fishing.legacyOptions
+
         val range =
             when (soundPath) {
-                config.fishing.legacyWaterSoundPath -> config.fishing.waterHookDelayRange
-                config.fishing.legacyLavaSoundPath -> config.fishing.lavaHookDelayRange
+                legacyOptions.waterSoundPath -> config.fishing.timings.waterPreCatchDelay
+                legacyOptions.lavaSoundPath -> config.fishing.timings.lavaPreCatchDelay
                 else -> return@onSound
             }
-        if (soundPath != config.fishing.legacyWaterSoundPath && soundPath != config.fishing.legacyLavaSoundPath) return@onSound
 
         val distance =
             MinecraftClient.getInstance().player?.fishHook?.pos?.distanceTo(Vec3d(instance.x, instance.y, instance.z))
                 ?: return@onSound
-        if (distance > config.fishing.maximumSoundDistance) return@onSound
+        if (distance > legacyOptions.maximumSoundDistance) return@onSound
 
         fishMutex.withLock {
             if (fishJob?.isActive == true) return@withLock
@@ -86,15 +87,15 @@ class FishingListener {
 
         if (!catching) return@runBlocking
 
-        var range: RangeValue? = null
+        var range: Range? = null
 
         for (i in -1..4) {
             val block = minecraftClient.world!!.getBlockState(fishHook.blockPos.down(i))
             if (block.fluidState.fluid == Fluids.WATER || block.fluidState.fluid == Fluids.FLOWING_WATER) {
-                range = config.fishing.waterHookDelayRange
+                range = config.fishing.timings.waterPreCatchDelay
                 break
             } else if (block.fluidState.fluid == Fluids.LAVA || block.fluidState.fluid == Fluids.FLOWING_LAVA) {
-                range = config.fishing.lavaHookDelayRange
+                range = config.fishing.timings.lavaPreCatchDelay
                 break
             }
         }

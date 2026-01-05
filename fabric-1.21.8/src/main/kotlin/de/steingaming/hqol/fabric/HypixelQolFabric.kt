@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.MinecraftClient
 import org.apache.logging.log4j.LogManager
+import kotlin.random.Random
 import kotlin.reflect.KProperty
 
 class HypixelQolFabric: ModInitializer {
@@ -25,6 +26,7 @@ class HypixelQolFabric: ModInitializer {
         operator fun getValue(thisRef: Any?, property: KProperty<*>): Config {
             return INSTANCE.configManager.config
         }
+        val RANDOM = Random(System.currentTimeMillis())
     }
 
     lateinit var configManager: ConfigManager

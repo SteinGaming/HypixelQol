@@ -72,18 +72,6 @@ val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
 }
 
 tasks.named<ShadowJar>("shadowJar") {
-    // Fix IMinecraft service
-    mergeServiceFiles()
-    doFirst {
-        val genServicesDir = File(buildDir, "generated-resources/services/META-INF/services")
-        genServicesDir.mkdirs()
-        File(genServicesDir, "de.steingaming.hqol.deps.moulconfig.common.IMinecraft").writeText("de.steingaming.hqol.deps.moulconfig.internal.ForgeMinecraft\n")
-    }
-    from(File(buildDir, "generated-resources/services")) {
-        into("")
-    }
-
-
     archiveClassifier.set("dep-dev")
     configurations.set(mutableListOf(project.configurations.getByName("shadowImplementation"), project.configurations.getByName("shadowApi")))
     relocate("io.github.notenoughupdates.moulconfig", "de.steingaming.hqol.deps.moulconfig")

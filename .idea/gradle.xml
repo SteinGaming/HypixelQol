@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/forge-1.8.9" />
           </set>
         </option>
+        <option name="resolveExternalAnnotations" value="true" />
       </GradleProjectSettings>
     </option>
   </component>
