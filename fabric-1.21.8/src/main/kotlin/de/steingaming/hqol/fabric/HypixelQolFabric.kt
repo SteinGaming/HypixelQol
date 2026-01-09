@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
 import de.steingaming.hqol.fabric.listeners.FishingListener
+import de.steingaming.hqol.fabric.listeners.RiftListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
@@ -42,6 +43,7 @@ class HypixelQolFabric: ModInitializer {
 
         ClientLifecycleEvents.CLIENT_STARTED.register { client: MinecraftClient? ->
             FishingListener()
+            RiftListener()
         }
 
         ClientCommandRegistrationCallback.EVENT.register(ClientCommandRegistrationCallback { source, registryAccess ->

@@ -12,7 +12,6 @@ import io.github.notenoughupdates.moulconfig.platform.MoulConfigScreenComponent
 import io.github.notenoughupdates.moulconfig.processor.ConfigProcessorDriver
 import io.github.notenoughupdates.moulconfig.processor.MoulConfigProcessor
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.util.InputUtil
@@ -43,6 +42,10 @@ class Config: MoulConfig() {
     @Expose
     @Category(name = "Fishing", desc = "Fishing configuration")
     val fishing: Fishing = Fishing()
+
+    @Expose
+    @Category(name = "Rift", desc = "Various features concerning the Rift")
+    val rift: Rift = Rift()
 
     fun displayConfigUI(previousScreen: Screen?): Screen {
         val processor = MoulConfigProcessor.withDefaults<Config>(this@Config)
