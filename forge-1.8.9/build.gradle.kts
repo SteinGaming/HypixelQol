@@ -1,5 +1,7 @@
+import com.github.jengelman.gradle.plugins.shadow.ShadowJavaPlugin.Companion.shadowJar
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.utils.extendsFrom
+import java.net.URI
 
 plugins {
     id("gg.essential.loom") version "1.9.29"
@@ -22,6 +24,10 @@ loom {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        url = URI("https://maven.architectury.dev/")
+        isAllowInsecureProtocol = true
+    }
     maven("https://repo.spongepowered.org/maven/")
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     maven("https://jitpack.io")
