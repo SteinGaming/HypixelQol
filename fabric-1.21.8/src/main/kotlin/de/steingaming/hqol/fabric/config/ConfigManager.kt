@@ -54,7 +54,7 @@ class ConfigManager(val configPath: Path) {
             HypixelQolFabric.LOGGER.error("Failed to parse config from $configPath")
             e.printStackTrace()
 
-            configPath.moveTo(Path.of(configPath.absolutePathString(), ".bak"))
+            configPath.moveTo(Path.of(configPath.absolutePathString() + ".bak"))
             Config()
         }
     }
