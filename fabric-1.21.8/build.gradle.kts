@@ -12,8 +12,8 @@ repositories {
     maven("https://maven.terraformersmc.com/") {
         name = "Terraformers"
     }
-    maven("https://maven.notenoughupdates.org/releases/") {
-        name = "NEU"
+    maven("https://repo.steingaming.de/releases/") {
+        name = "NEU-custom"
     }
 }
 val shadowModImpl by configurations.creating {
@@ -29,7 +29,7 @@ dependencies {
     //modImplementation("net.fabricmc.fabric-api:fabric-sound-api-v1:${project.property("fabric_version")}")
 
     //modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
-    shadowModImpl("org.notenoughupdates.moulconfig:modern-1.21.7:4.2.0-beta")
+    shadowModImpl("org.notenoughupdates.moulconfig:modern-1.21.7:4.2.0-beta-custom")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
 }
 
