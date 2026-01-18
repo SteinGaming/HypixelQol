@@ -43,8 +43,7 @@ tasks {
     processResources {
         filesMatching("fabric.mod.json") {
             expand(
-                "version" to project.version,
-                "yacl_version" to project.property("yacl_version")
+                "version" to project.version
             )
         }
     }
