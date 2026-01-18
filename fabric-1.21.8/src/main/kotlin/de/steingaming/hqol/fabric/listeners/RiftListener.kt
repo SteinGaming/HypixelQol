@@ -62,7 +62,7 @@ class RiftListener {
     }
 
     private fun twinClawAutoIce(client: MinecraftClient, twinclawAutoIce: Rift.TwinclawAutoIce) {
-        val playerPos = client.player?.pos ?: return
+        val playerPos = client.player?.entityPos ?: return
         val box = Box(
             playerPos.x - TwinclawConstants.ENTITY_MAX_DISTANCE,
             playerPos.y - TwinclawConstants.ENTITY_MAX_DISTANCE,
@@ -87,7 +87,7 @@ class RiftListener {
         val timer = entities.mapNotNull {
             val name = it.displayName ?: it.customName
             val nameString = name?.literalString ?: name?.string ?: return@mapNotNull null
-            if (it.pos.distanceTo(spawnedByArmorStand.pos) > 1.0) return@mapNotNull null
+            if (it.entityPos.distanceTo(spawnedByArmorStand.entityPos) > 1.0) return@mapNotNull null
             val matcher = TwinclawConstants.STATUS_BAR_MATCHER.matcher(nameString.cleanupColorCodes())
             if (!matcher.find()) return@mapNotNull null
             matcher.group("timer").toFloatOrNull()

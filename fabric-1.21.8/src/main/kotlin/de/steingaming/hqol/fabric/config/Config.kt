@@ -27,7 +27,7 @@ class Config: MoulConfig() {
             HypixelQolFabric.INSTANCE.configManager.save()
         }
         ClientTickEvents.START_CLIENT_TICK.register {
-            val isPressed = InputUtil.isKeyPressed(MinecraftClient.getInstance().window.handle, 256)
+            val isPressed = InputUtil.isKeyPressed(MinecraftClient.getInstance().window, 256)
             if (isPressed && prevTickScreen is MoulConfigScreenComponent) {
                 val moulScreen = prevTickScreen as MoulConfigScreenComponent
                 val editor = (moulScreen.guiContext.root as GuiElementComponent).element as MoulConfigEditor<*>

@@ -63,7 +63,7 @@ class FishingListener {
             }
 
         val distance =
-            MinecraftClient.getInstance().player?.fishHook?.pos?.distanceTo(Vec3d(instance.x, instance.y, instance.z))
+            MinecraftClient.getInstance().player?.fishHook?.entityPos?.distanceTo(Vec3d(instance.x, instance.y, instance.z))
                 ?: return@onSound
         if (distance > legacyOptions.maximumSoundDistance) return@onSound
 
@@ -79,7 +79,7 @@ class FishingListener {
         if (!config.fishing.enabled || config.fishing.useLegacyDetection) return@runBlocking
         val fishHook = minecraftClient.player?.fishHook ?: return@runBlocking
 
-        val catching = fishHook.world.getEntitiesByType(
+        val catching = fishHook.entityWorld.getEntitiesByType(
             EntityType.ARMOR_STAND, fishHook.boundingBox.expand(.0, 0.5, .0)
         ) {
             it.displayName?.string == "!!!"

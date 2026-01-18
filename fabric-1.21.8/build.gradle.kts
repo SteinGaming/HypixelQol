@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar.Companion.shadowJar
 import net.fabricmc.loom.task.RemapJarTask
 plugins {
     val loom_version = "1.11-SNAPSHOT"
@@ -25,11 +26,11 @@ dependencies {
 
     modImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${project.property("coroutines_version")}")
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_api_version")}")
     //modImplementation("net.fabricmc.fabric-api:fabric-sound-api-v1:${project.property("fabric_version")}")
 
     //modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
-    shadowModImpl("org.notenoughupdates.moulconfig:modern-1.21.7:4.2.0-beta-custom")
+    shadowModImpl("org.notenoughupdates.moulconfig:modern-1.21.10:4.2.0-beta-custom")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
 }
 
