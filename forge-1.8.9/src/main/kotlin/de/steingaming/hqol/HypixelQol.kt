@@ -36,7 +36,7 @@ import kotlin.jvm.optionals.getOrNull
 class HypixelQol {
     companion object {
         const val MODID = "hypixelqol"
-        const val MODVERSION = "2.4.1"
+        const val MODVERSION = "2.5.0"
         val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping()
             .excludeFieldsWithModifiers(Modifier.TRANSIENT).create()
         lateinit var instance: HypixelQol
