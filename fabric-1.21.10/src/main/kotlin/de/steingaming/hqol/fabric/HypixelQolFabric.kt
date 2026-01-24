@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
+import de.steingaming.hqol.fabric.listeners.FastleapListener
 import de.steingaming.hqol.fabric.listeners.FishingListener
 import de.steingaming.hqol.fabric.listeners.RiftListener
 import net.fabricmc.api.ModInitializer
@@ -32,6 +33,7 @@ class HypixelQolFabric: ModInitializer {
 
     lateinit var configManager: ConfigManager
 
+    @Suppress("UnusedExpression")
     override fun onInitialize() {
         INSTANCE = this
         LOGGER.info("Initializing HypixelQolFabric...")
@@ -44,6 +46,7 @@ class HypixelQolFabric: ModInitializer {
         ClientLifecycleEvents.CLIENT_STARTED.register { client: MinecraftClient? ->
             FishingListener()
             RiftListener()
+            FastleapListener
         }
 
         ClientCommandRegistrationCallback.EVENT.register(ClientCommandRegistrationCallback { source, registryAccess ->

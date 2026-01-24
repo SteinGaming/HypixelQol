@@ -2,6 +2,7 @@ package de.steingaming.hqol.fabric.config
 
 import com.google.gson.annotations.Expose
 import de.steingaming.hqol.fabric.HypixelQolFabric
+import de.steingaming.hqol.fabric.config.categories.Fastleap
 import de.steingaming.hqol.fabric.config.categories.Fishing
 import de.steingaming.hqol.fabric.config.categories.Rift
 import io.github.notenoughupdates.moulconfig.annotations.Category
@@ -46,6 +47,10 @@ class Config: MoulConfig() {
     @Expose
     @Category(name = "Rift", desc = "Various features concerning the Rift")
     val rift: Rift = Rift()
+
+    @Expose
+    @Category(name = "Fastleap", desc = "Fastleap feature for dungeons")
+    val fastleap: Fastleap = Fastleap()
 
     fun displayConfigUI(previousScreen: Screen?): Screen {
         val processor = MoulConfigProcessor.withDefaults<Config>(this@Config)

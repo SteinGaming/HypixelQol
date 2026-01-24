@@ -3,6 +3,8 @@
   "package": "de.steingaming.hqol.fabric.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "MinecraftClientInvoker"
+    "MinecraftClientInvoker",
+    "InjectClientPlayNetworkHandler",
+    "InjectMinecraftClient"
   ]
 }
