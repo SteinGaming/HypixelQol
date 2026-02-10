@@ -15,7 +15,7 @@ allprojects {
         mavenCentral()
     }
 
-    version = "2.5.0-SNAPSHOT"
+    version = "2.6.0-SNAPSHOT"
     group = "de.steingaming"
 }
 
