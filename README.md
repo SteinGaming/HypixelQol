@@ -3,15 +3,11 @@
 
 A hypixel <span style="font-size:7px">~~macro~~</span> improvement mod for Hypixel Skyblock.
 
-## Table of Contents
+### Feature list
+- **Fishing**: Automatically reel and throw bobber
+- **Rift**: Auto-Ice and Auto-Melon
+- **Fastleap**: Leap to class when in specified section
 
-1. [How to use the fishing feature](#how-to-use-the-fishing-feature)
-2. [Building it yourself](#building-it-yourself)
-
-### How to use the fishing feature
-This project has been split into two versions, **which are currently out-of-sync and incompatible with each other**:
-- [Documentation for Forge 1.8.9](forge-1.8.9/README.md)
-- [Documentation for Fabric 1.21.5](fabric-1.21.5/README.md)
 
 ### Building it yourself
 
@@ -21,9 +17,10 @@ Github Actions automatically updates the jar [in the release tab](https://github
 1. Either:
    1. [Download](https://github.com/SteinGaming/FishingQol/archive/refs/tags/v1.0.0.zip) this repository and extract the folder.
    2. [Clone](https://www.git-scm.com/docs/git-clone) this repository using the [git cli](https://www.git-scm.com/)
-2. Open your Command line inside the FishingQol directory
-3. Run `gradlew.bat build` for Windows and `./gradlew build` for Linux (if you get a permission missing error, run `chmod +x gradlew;`)
-4. After it's done running, the JARs will appear in `output/`, which you can then copy to your mods directory
+2. Open your Command line inside the HypixelQol directory
+3. Run `gradlew.bat :<version>:build` for Windows or `./gradlew :<version>:build` for Linux (if you get a permission missing error, run `chmod +x gradlew;`)
+   - Replace `<version>` with the legacy version style. It currently accepts either `1.21.10` or `1.21.11`
+4. After it's done running, the JARs will appear in `build/libs/`, which you can then copy to your mods directory
 5. FOR NON DEVS ONLY: Delete any remenants after you're done. <br>
    Your home folder will contain a `.gradle`, most likely hidden, folder which should/could contain multiple hundreds of Megabytes. <br>
    You can safely delete it, but if you want to build this project again, it will have to download everything again. <br>

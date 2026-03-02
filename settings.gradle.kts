@@ -14,14 +14,18 @@ pluginManagement {
         maven(url = "https://repo.spongepowered.org/maven/")
         maven(url = "https://repo.essential.gg/repository/maven-releases/")
         maven(url = "https://maven.architectury.dev/")
-    }
-    resolutionStrategy {
-        eachPlugin {
-            when (requested.id.id) {
-                "gg.essential.loom" -> useModule("gg.essential:architectury-loom:${requested.version}")
-            }
-        }
+        maven("https://maven.kikugie.dev/snapshots") { name = "KikuGie Snapshots" }
     }
 }
 
-include(":fabric-1.21.11")
+plugins {
+    id("dev.kikugie.stonecutter") version "0.8.3"
+}
+
+stonecutter {
+    create(rootProject) {
+        // See https://stonecutter.kikugie.dev/wiki/start/#choosing-minecraft-versions
+        versions("1.21.10", "1.21.11")
+        vcsVersion = "1.21.10"
+    }
+}
