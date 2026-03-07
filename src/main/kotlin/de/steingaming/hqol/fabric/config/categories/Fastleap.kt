@@ -47,23 +47,23 @@ class Fastleap {
 
         @Expose
         @ConfigOption(name = "S1", desc = "Which class to leap to when in S1")
-        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "none"])
+        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "tank", "none"])
         var S1: String = ""
         @Expose
         @ConfigOption(name = "S2", desc = "Which class to leap to when in S2")
-        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "none"])
+        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "tank", "none"])
         var S2: String = ""
         @Expose
         @ConfigOption(name = "S3", desc = "Which class to leap to when in S3")
-        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "none"])
+        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "tank", "none"])
         var S3: String = ""
         @Expose
         @ConfigOption(name = "S4", desc = "Which class to leap to when in S4")
-        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "none"])
+        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "tank", "none"])
         var S4: String = ""
         @Expose
         @ConfigOption(name = "Default", desc = "Which class to leap to when in no section")
-        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "none"])
+        @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "tank", "none"])
         var default: String = ""
     }
 
