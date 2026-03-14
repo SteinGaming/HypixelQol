@@ -2,8 +2,10 @@ package de.steingaming.hqol.fabric.listeners
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.Utilities
-import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
+import de.steingaming.hqol.fabric.cleanupColorCodes
 import de.steingaming.hqol.fabric.config.categories.Fastleap
+import de.steingaming.hqol.fabric.helper.ChatHelper
+import de.steingaming.hqol.fabric.helper.InventoryHelper.clickSlotUnchecked
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -35,7 +37,7 @@ object FastleapListener {
 
     fun debugMessage(msg: String) {
         if (config.debug)
-            Utilities.sendToChat(msg)
+            ChatHelper.sendToChat(msg)
     }
 
     val random = Random(System.currentTimeMillis())
@@ -70,7 +72,7 @@ object FastleapListener {
         if (windowId != window.id || window.nameUnformatted != "Spirit Leap") return false
         debugMessage("Timeout diff: ${(leap.time + config.timeout * 1000.0f).toInt() - System.currentTimeMillis()}")
         if (config.timeout != 0.0f && leap.time + (config.timeout * 1000.0f).toInt() < System.currentTimeMillis()) {
-            Utilities.sendToChat("Timeout of ${config.timeout}s reached! Not interacting.")
+            ChatHelper.sendToChat("Timeout of ${config.timeout}s reached! Not interacting.")
             resetLeapAndWindow()
             return false
         }
@@ -92,7 +94,7 @@ object FastleapListener {
             delay(random.nextLong(config.timings.lower.toLong(), config.timings.upper.toLong()).also { debugMessage("Waiting $it ms") })
             debugMessage("Sending Packet")
             debugMessage("Window ID: ${mc.player?.containerMenu?.containerId}; Item name for slot: ${player.containerMenu?.getSlot(slot)?.item?.hoverName?.string?.cleanupColorCodes()?.lowercase()}")
-            Utilities.clickSlotUnchecked(
+            clickSlotUnchecked(
                 windowId, slot, 0, ClickType.PICKUP, player
             )
 
@@ -104,7 +106,7 @@ object FastleapListener {
             }
         }.invokeOnCompletion {
             it ?: return@invokeOnCompletion
-            Utilities.sendToChat("§cError when executing leap scheduler, view logs!")
+            ChatHelper.sendToChat("§cError when executing leap scheduler, view logs!")
             it.printStackTrace()
         }
         return combineWithConfigOption(true)
@@ -150,7 +152,7 @@ object FastleapListener {
             return false
         }
         val playerName = findPlayerByClassName(selectedClass) ?: let {
-            Utilities.sendToChat("Couldn't find a player with the class \"$selectedClass\"")
+            ChatHelper.sendToChat("Couldn't find a player with the class \"$selectedClass\"")
             return false
         }
         debugMessage("Match found: $playerName")

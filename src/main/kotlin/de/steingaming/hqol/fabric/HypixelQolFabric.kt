@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
+import de.steingaming.hqol.fabric.helper.ChatHelper
 import de.steingaming.hqol.fabric.listeners.FastleapListener
 import de.steingaming.hqol.fabric.listeners.FishingListener
 import de.steingaming.hqol.fabric.listeners.RiftListener
@@ -41,7 +42,8 @@ class HypixelQolFabric: ModInitializer {
         INSTANCE = this
         LOGGER.info("Initializing HypixelQolFabric...")
 
-        Utilities.init()
+        // Initialize Helpers
+        ChatHelper.init()
 
         val fabricLoader = FabricLoader.getInstance()
         val configPath = fabricLoader.configDir.resolve("hypixelqol.json")

@@ -1,7 +1,7 @@
 package de.steingaming.hqol.fabric.listeners
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
-import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
+import de.steingaming.hqol.fabric.cleanupColorCodes
 import de.steingaming.hqol.fabric.config.categories.Rift
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex

@@ -3,6 +3,7 @@ package de.steingaming.hqol.fabric.listeners
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.Utilities
 import de.steingaming.hqol.fabric.config.Config.Range
+import de.steingaming.hqol.fabric.helper.ChatHelper
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -104,7 +105,7 @@ class FishingListener {
         }
 
         range ?: let {
-            Utilities.sendToChat("Could not find a fluid block!")
+            ChatHelper.sendToChat("Could not find a fluid block!")
             return@runBlocking
         }
 
