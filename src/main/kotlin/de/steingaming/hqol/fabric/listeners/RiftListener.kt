@@ -3,12 +3,14 @@ package de.steingaming.hqol.fabric.listeners
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.cleanupColorCodes
 import de.steingaming.hqol.fabric.config.categories.Rift
+import de.steingaming.hqol.fabric.helper.InventoryHelper.inventoryInteractDelay
+import de.steingaming.hqol.fabric.helper.InventoryHelper.changeSlot
+import de.steingaming.hqol.fabric.helper.InventoryHelper.findItemType
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.AABB
 
@@ -98,37 +100,20 @@ class RiftListener {
         clickSlotAndReturnCoroutine(client, slot)
     }
 
-    fun findItemType(client: Minecraft, item: Item): Int? {
-        for (i in 0..<9) {
-            if (client.player?.inventory?.getItem(i)?.item == item)
-                return i
-        }
-        return null
-    }
-
+    // TODO use InventoryHelper function instead
     fun clickSlotAndReturnCoroutine(client: Minecraft, slot: Int) {
         if (!hotbarMutex.tryLock()) return
         val currentSlot = client.player!!.inventory.selectedSlot
         scope.launch {
             changeSlot(client, slot)
-            actionDelay()
+            inventoryInteractDelay()
             client.execute { client.startUseItem() }
-            actionDelay()
+            inventoryInteractDelay()
             changeSlot(client, currentSlot)
             lastActionTime = System.currentTimeMillis()
             hotbarMutex.unlock()
         }
     }
 
-    private suspend fun actionDelay() {
-        val random = HypixelQolFabric.RANDOM
-        delay(random.nextLong(50, 100))
-    }
 
-    private fun changeSlot(client: Minecraft, slot: Int) {
-        client.execute {
-            if (client.screen != null || client.isPaused) return@execute
-            client.player!!.inventory.selectedSlot = slot
-        }
-    }
 }

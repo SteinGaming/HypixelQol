@@ -3,8 +3,13 @@ package de.steingaming.hqol.fabric.helper
 import com.google.common.collect.Lists
 import com.google.common.primitives.Shorts
 import com.google.common.primitives.SignedBytes
+import de.steingaming.hqol.fabric.HypixelQolFabric
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
 import net.minecraft.core.NonNullList
 import net.minecraft.network.HashedStack
@@ -12,7 +17,9 @@ import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import java.util.function.Predicate
 
 object InventoryHelper {
     /**
@@ -55,5 +62,40 @@ object InventoryHelper {
                 )
             )
     }
-}
+    fun findItemType(client: Minecraft, item: Item): Int? = findItemInHotbarByPredicate(client) {
+        it?.item == item
+    }
 
+    fun findItemInHotbarByPredicate(client: Minecraft, predicate: Predicate<ItemStack?>): Int? {
+        for (i in 0..<9) {
+            if (predicate.test(client.player?.inventory?.getItem(i)))
+                return i
+        }
+        return null
+    }
+
+    fun clickSlotAndReturnCoroutine(scope: CoroutineScope, client: Minecraft, slot: Int): Job {
+        val currentSlot = client.player!!.inventory.selectedSlot
+        return scope.launch {
+            changeSlot(client, slot)
+            inventoryInteractDelay()
+            client.execute { client.startUseItem() }
+            inventoryInteractDelay()
+            changeSlot(client, currentSlot)
+        }
+    }
+
+    suspend fun inventoryInteractDelay() {
+        val random = HypixelQolFabric.RANDOM
+        delay(random.nextLong(50, 100))
+    }
+
+    fun changeSlot(client: Minecraft, slot: Int) {
+        client.execute {
+            if (client.screen != null || client.isPaused) return@execute
+            client.player!!.inventory.selectedSlot = slot
+        }
+    }
+
+
+}
