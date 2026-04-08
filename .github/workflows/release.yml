@@ -32,7 +32,7 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v5
     - name: Build
-      run: ./gradlew build
+      run: ./gradlew buildAndCollect
     - name: Release
       uses: svenstaro/upload-release-action@v2
       with:
