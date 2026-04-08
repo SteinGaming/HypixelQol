@@ -134,6 +134,15 @@ tasks {
                 from(archiveFile)
                 into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
             }
+    }
 
+    register<Copy>("buildAndCollect") {
+        group = "build"
+        dependsOn("build")
+        from(
+            if (sc.current.parsed < "26.1") named<org.gradle.jvm.tasks.Jar>("remapJar").map { it.archiveFile }
+            else shadowJar.map { it.archiveFile }
+        )
+        into(rootProject.layout.buildDirectory.file("output/"))
     }
 }

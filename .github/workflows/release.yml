@@ -38,4 +38,4 @@ jobs:
       with:
         repo_token: '${{ secrets.GITHUB_TOKEN }}'
         file_glob: true
-        file: build/libs/*/*.jar
+        file: build/output/*.jar
