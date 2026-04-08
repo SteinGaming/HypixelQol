@@ -19,7 +19,7 @@ val minecraft = sc.current.version
 val accesswidener = when {
     stonecutter.eval(minecraft, ">=1.21.11") -> "1.21.11.accesswidener"
     stonecutter.eval(minecraft, ">=1.20.10") -> "1.21.10.accesswidener"
-    else -> "1.19.accesswidener"
+    else -> null
 }
 repositories {
     maven("https://maven.isxander.dev/releases") {
@@ -60,7 +60,8 @@ dependencies {
 
 loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json") // Useful for interface injection
-    accessWidenerPath = rootProject.file("src/main/resources/hqol-$accesswidener")
+    if (accesswidener != null)
+        accessWidenerPath = rootProject.file("src/main/resources/hqol-$accesswidener")
 
     decompilerOptions.named("vineflower") {
         options.put("mark-corresponding-synthetics", "1") // Adds names to lambdas - useful for mixins
@@ -95,6 +96,8 @@ tasks {
             "minecraft" to project.property("mod.mc_dep"),
             "aw_file" to accesswidener
         )
+        if (accesswidener != null)
+            props["aw_file"] = accesswidener
 
         filesMatching("fabric.mod.json") { expand(props) }
 
