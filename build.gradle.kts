@@ -1,15 +1,17 @@
+
 plugins {
     idea
     java
-    kotlin("jvm") version "2.2.0"
-    id("net.fabricmc.fabric-loom-remap")
+    kotlin("jvm") version "2.3.20"
+    id("dev.kikugie.loom-back-compat")
     id("com.gradleup.shadow") version "9.3.1"
 }
 group = "de.steingaming"
 version = "${property("mod.version")}+${sc.current.version}"
-base.archivesName = property("mod.id") as String
+project.base.archivesName = property("mod.id") as String
 
 val requiredJava = when {
+    sc.current.parsed >= "26.1" -> JavaVersion.VERSION_25
     sc.current.parsed >= "1.20.5" -> JavaVersion.VERSION_21
     sc.current.parsed >= "1.18" -> JavaVersion.VERSION_17
     sc.current.parsed >= "1.17" -> JavaVersion.VERSION_16
@@ -17,6 +19,7 @@ val requiredJava = when {
 }
 val minecraft = sc.current.version
 val accesswidener = when {
+    stonecutter.eval(minecraft, ">=26.1") -> "26.1.accesswidener"
     stonecutter.eval(minecraft, ">=1.21.11") -> "1.21.11.accesswidener"
     stonecutter.eval(minecraft, ">=1.20.10") -> "1.21.10.accesswidener"
     else -> null
@@ -47,7 +50,7 @@ dependencies {
     }
 
     minecraft("com.mojang:minecraft:${sc.current.version}")
-    mappings(loom.officialMojangMappings())
+    loomx.applyMojangMappings()
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.13.9+kotlin.2.3.10")
     modImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
@@ -88,13 +91,14 @@ tasks {
         inputs.property("name", project.property("mod.name"))
         inputs.property("version", project.property("mod.version"))
         inputs.property("minecraft", project.property("mod.mc_dep"))
+        inputs.property("java_version", requiredJava.majorVersion)
 
-        val props = mapOf(
+        val props = mutableMapOf(
             "id" to project.property("mod.id"),
             "name" to project.property("mod.name"),
             "version" to project.property("mod.version"),
             "minecraft" to project.property("mod.mc_dep"),
-            "aw_file" to accesswidener
+            "java_version" to requiredJava.majorVersion,
         )
         if (accesswidener != null)
             props["aw_file"] = accesswidener
@@ -105,48 +109,31 @@ tasks {
         filesMatching("*.mixins.json") { expand("java" to mixinJava) }
     }
 
-    // Builds the version into a shared folder in `build/libs/${mod version}/`
-    register<Copy>("buildAndCollect") {
-        group = "build"
-        from(remapJar.map { it.archiveFile }, remapSourcesJar.map { it.archiveFile })
-        into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
-        dependsOn("build")
-    }
-    val remapJar = named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
-        archiveClassifier.set("")
-        dependsOn(shadowJar)
-        inputFile.set(shadowJar.get().archiveFile)
-        destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
+    if (sc.eval(minecraft, "<=1.21.11")) {
+        named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
+            archiveClassifier.set("")
+            dependsOn(shadowJar)
+            inputFile.set(shadowJar.get().archiveFile)
+            destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
+            copy {
+                from(archiveFile)
+                into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+            }
+        }
+    } else {
+        build.get().dependsOn("shadowJar")
     }
     shadowJar {
-        archiveClassifier.set("dev")
+        archiveClassifier.set(
+            if (sc.current.parsed < "26.1") "dev" else ""
+        )
         mergeServiceFiles()
         relocate("io.github.notenoughupdates.moulconfig", "de.steingaming.hqol.deps.moulconfig")
         configurations = listOf(shadowModImpl)
+        if (sc.current.parsed >= "26.1") copy {
+                from(archiveFile)
+                into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+            }
+
     }
 }
-/*
-subprojects {
-    afterEvaluate {
-        val serviceLocation = try {
-            project.property("moulconfig-service")
-        } catch (e: MissingPropertyException) {
-            null
-        }
-        if (serviceLocation != null)
-            tasks.named<Jar>("shadowJar") {
-                // Fix IMinecraft service
-                doFirst {
-                    val genServicesDir = File(layout.buildDirectory.asFile.get(), "generated-resources/services/META-INF/services")
-                    genServicesDir.mkdirs()
-                    File(
-                        genServicesDir,
-                        "de.steingaming.hqol.deps.moulconfig.common.IMinecraft"
-                    ).writeText("$serviceLocation\n")
-                }
-                from(File(layout.buildDirectory.asFile.get(), "generated-resources/services")) {
-                    into("")
-                }
-            }
-    }
-}*/

@@ -1,7 +1,6 @@
 package de.steingaming.hqol.fabric.listeners
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
-import de.steingaming.hqol.fabric.Utilities
 import de.steingaming.hqol.fabric.cleanupColorCodes
 import de.steingaming.hqol.fabric.config.categories.Fastleap
 import de.steingaming.hqol.fabric.helper.ChatHelper
@@ -15,7 +14,7 @@ import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.random.Random
@@ -95,7 +94,7 @@ object FastleapListener {
             debugMessage("Sending Packet")
             debugMessage("Window ID: ${mc.player?.containerMenu?.containerId}; Item name for slot: ${player.containerMenu?.getSlot(slot)?.item?.hoverName?.string?.cleanupColorCodes()?.lowercase()}")
             clickSlotUnchecked(
-                windowId, slot, 0, ClickType.PICKUP, player
+                windowId, slot, 0, ContainerInput.PICKUP, player
             )
 
             if (config.playNoise) {

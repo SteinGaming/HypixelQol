@@ -13,7 +13,10 @@ object ChatHelper {
             messageDeque.add(msg)
             return
         }
-        Minecraft.getInstance().gui.chat.addMessage(
+        //? if >= 26.1 {
+        Minecraft.getInstance().gui.chat.addServerSystemMessage(
+        //?} else
+        /*Minecraft.getInstance().gui.chat.addMessage(*/
             Component.nullToEmpty(msg)
         )
     }
@@ -22,7 +25,8 @@ object ChatHelper {
         ClientTickEvents.START_CLIENT_TICK.register {
             while (messageDeque.isNotEmpty()) {
                 val msg = messageDeque.removeFirst()
-                it.gui.chat.addMessage(Component.nullToEmpty(msg))
+                sendToChat(msg) // TODO needs testing if it's on render thread
+                //it.gui.chat.addMessage(Component.nullToEmpty(msg))
             }
         }
     }

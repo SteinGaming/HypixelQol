@@ -1,10 +1,10 @@
 plugins {
     id("dev.kikugie.stonecutter")
-    id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT" apply false
+    id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT" apply false
     // id("me.modmuss50.mod-publish-plugin") version "1.0.+" apply false
 }
 
-stonecutter active "1.21.10"
+stonecutter active "26.1"
 
 /*
 // Make newer versions be published last
@@ -27,6 +27,9 @@ stonecutter parameters {
         }
         string(current.parsed <= "1.21.10") {
             replace("Identifier", "ResourceLocation")
+        }
+        string(current.parsed < "26.1") {
+            replace("ContainerInput", "ClickType")
         }
     }
 }
