@@ -1,7 +1,8 @@
 package de.steingaming.hqol.fabric.listeners
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
-import de.steingaming.hqol.fabric.cleanupColorCodes
+import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
+import de.steingaming.hqol.fabric.Utilities.to
 import de.steingaming.hqol.fabric.config.categories.Fastleap
 import de.steingaming.hqol.fabric.helper.ChatHelper
 import de.steingaming.hqol.fabric.helper.InventoryHelper.clickSlotUnchecked
@@ -126,33 +127,41 @@ object FastleapListener {
             it != Minecraft.getInstance().player?.gameProfile?.name?.lowercase()
         } // TODO check duplicates classes
         debugMessage("findPlayerByClassName res: $playerName")
-
         return playerName
     }
 
-    fun positionToSectorAndClass(pos: Vec3): Pair<String, String> {
+    fun positionToSector(pos: Vec3): Triple<String, String, String> {
         val classes = config.classes
+        val names = config.names
         return when {
-            S1.contains(pos) -> "S1" to classes.S1
-            S2.contains(pos) -> "S2" to classes.S2
-            S3.contains(pos) -> "S3" to classes.S3
-            S4.contains(pos) || S4_CORE.contains(pos) -> "S4" to classes.S4
-            else -> "None" to classes.default
+            S1.contains(pos) -> "S1" to classes.S1 to names.S1
+            S2.contains(pos) -> "S2" to classes.S2 to names.S2
+            S3.contains(pos) -> "S3" to classes.S3 to names.S3
+            S4.contains(pos) || S4_CORE.contains(pos) -> "S4" to classes.S4 to names.S4
+            else -> "None" to classes.default to names.default
         }
+    }
+
+    fun findPlayerByNameExistent(playerName: String): String? {
+        if (playerName.isBlank()) return null;
+        val player = Minecraft.getInstance().level?.players()?.firstOrNull {
+            it.gameProfile.name.equals(playerName, true)
+        }
+        return player?.gameProfile?.name?.lowercase()
     }
 
     fun appendFastLeap(): Boolean {
         val player = Minecraft.getInstance().player ?: return false
         val pos = player.position()
 
-        val (sector, selectedClass) = positionToSectorAndClass(pos)
+        val (sector, selectedClass, username) = positionToSector(pos)
         debugMessage("Which sector? $sector")
-        if (selectedClass == "none") {
-            debugMessage("No class set, canceling")
+        if (selectedClass == "none" && username.isBlank()) {
+            debugMessage("No class/name set, canceling")
             return false
         }
-        val playerName = findPlayerByClassName(selectedClass) ?: let {
-            ChatHelper.sendToChat("Couldn't find a player with the class \"$selectedClass\"")
+        val playerName = findPlayerByClassName(selectedClass) ?: findPlayerByNameExistent(username) ?: let {
+            ChatHelper.sendToChat("Couldn't find a player with the class \"$selectedClass\" or name \"$username\"")
             return false
         }
         debugMessage("Match found: $playerName")

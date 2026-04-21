@@ -26,6 +26,12 @@ class Fastleap {
     var classes: FastLeapClasses = FastLeapClasses()
 
     @Expose
+    @ConfigOption(name = "Section to names", desc = "Specify when to leap to a specific username")
+    @Accordion
+    var names: FastLeapNames = FastLeapNames()
+
+
+    @Expose
     @ConfigOption(name = "Timings", desc = "How long to wait (randomly) until actually leaping")
     @Accordion
     var timings: FastLeapTimings = FastLeapTimings()
@@ -39,16 +45,14 @@ class Fastleap {
     @ConfigOption(name = "Play pling when leaping", desc = "QoL feature")
     @ConfigEditorBoolean
     var playNoise: Boolean = true
-    class FastLeapClasses {
-        @Expose
-        @ConfigEditorInfoText(infoTitle = "All class names in lowercase")
-        @ConfigOption(name = "How to use", desc = "Leave empty to disable")
-        val _text = null
 
+
+    class FastLeapClasses {
         @Expose
         @ConfigOption(name = "S1", desc = "Which class to leap to when in S1")
         @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "tank", "none"])
         var S1: String = ""
+
         @Expose
         @ConfigOption(name = "S2", desc = "Which class to leap to when in S2")
         @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "tank", "none"])
@@ -64,6 +68,35 @@ class Fastleap {
         @Expose
         @ConfigOption(name = "Default", desc = "Which class to leap to when in no section")
         @ConfigEditorDropdown(values = ["archer", "healer", "berserk", "mage", "tank", "none"])
+        var default: String = ""
+    }
+
+
+    class FastLeapNames {
+        @Expose
+        @ConfigOption(name = "", desc = "Leave empty to fallback to classes")
+        @ConfigEditorInfoText(infoTitle = "")
+        val _text = ""
+
+        @Expose
+        @ConfigOption(name = "S1", desc = "Which username to leap to when in S1")
+        @ConfigEditorText
+        var S1: String = ""
+        @Expose
+        @ConfigOption(name = "S2", desc = "Which username to leap to when in S2")
+        @ConfigEditorText
+        var S2: String = ""
+        @Expose
+        @ConfigOption(name = "S3", desc = "Which username to leap to when in S3")
+        @ConfigEditorText
+        var S3: String = ""
+        @Expose
+        @ConfigOption(name = "S4", desc = "Which username to leap to when in S4")
+        @ConfigEditorText
+        var S4: String = ""
+        @Expose
+        @ConfigOption(name = "Default", desc = "Which username to leap to when in no section")
+        @ConfigEditorText
         var default: String = ""
     }
 

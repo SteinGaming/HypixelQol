@@ -16,7 +16,7 @@ object ChatHelper {
         //? if >= 26.1 {
         Minecraft.getInstance().gui.chat.addServerSystemMessage(
         //?} else
-        /*Minecraft.getInstance().gui.chat.addMessage(*/
+        //Minecraft.getInstance().gui.chat.addMessage(
             Component.nullToEmpty(msg)
         )
     }
