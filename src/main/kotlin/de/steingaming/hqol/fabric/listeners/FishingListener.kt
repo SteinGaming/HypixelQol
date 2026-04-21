@@ -14,6 +14,7 @@ import net.minecraft.client.sounds.WeighedSoundEvents
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.phys.Vec3
+import kotlin.time.Duration.Companion.milliseconds
 
 class FishingListener {
     init {
@@ -36,18 +37,18 @@ class FishingListener {
             val config by HypixelQolFabric
             val mc = Minecraft.getInstance()
 
-            delay(range.getRandomValue())
+            delay(range.getRandomValue().milliseconds)
             mc.execute {
                 mc.startUseItem()
             }
 
-            delay(config.fishing.timings.castRodDelay.getRandomValue())
+            delay(config.fishing.timings.castRodDelay.getRandomValue().milliseconds)
             mc.execute {
                 mc.startUseItem()
             }
 
             // Post delay
-            delay(500)
+            delay(500.milliseconds)
         }
     }
 

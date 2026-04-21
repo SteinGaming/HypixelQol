@@ -18,6 +18,7 @@ import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
 
 object FastleapListener {
     data class Window(val id: Int, val nameUnformatted: String)
@@ -90,7 +91,7 @@ object FastleapListener {
         scope.launch {
             val mc = Minecraft.getInstance()
             val player = mc.player!!
-            delay(random.nextLong(config.timings.lower.toLong(), config.timings.upper.toLong()).also { debugMessage("Waiting $it ms") })
+            delay(random.nextLong(config.timings.lower.toLong(), config.timings.upper.toLong()).also { debugMessage("Waiting $it ms") }.milliseconds)
             debugMessage("Sending Packet")
             debugMessage("Window ID: ${mc.player?.containerMenu?.containerId}; Item name for slot: ${player.containerMenu?.getSlot(slot)?.item?.hoverName?.string?.cleanupColorCodes()?.lowercase()}")
             clickSlotUnchecked(

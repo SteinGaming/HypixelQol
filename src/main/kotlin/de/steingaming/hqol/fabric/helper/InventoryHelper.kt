@@ -20,6 +20,7 @@ import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import java.util.function.Predicate
+import kotlin.time.Duration.Companion.milliseconds
 
 object InventoryHelper {
     /**
@@ -88,7 +89,7 @@ object InventoryHelper {
 
     suspend fun inventoryInteractDelay() {
         val random = HypixelQolFabric.RANDOM
-        delay(random.nextLong(50, 100))
+        delay(random.nextLong(50, 100).milliseconds)
     }
 
     fun changeSlot(client: Minecraft, slot: Int) {
