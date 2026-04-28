@@ -1,4 +1,4 @@
-package de.steingaming.hqol.fabric.listeners
+package de.steingaming.hqol.fabric.features
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
@@ -6,6 +6,7 @@ import de.steingaming.hqol.fabric.config.categories.Rift
 import de.steingaming.hqol.fabric.helper.InventoryHelper.inventoryInteractDelay
 import de.steingaming.hqol.fabric.helper.InventoryHelper.changeSlot
 import de.steingaming.hqol.fabric.helper.InventoryHelper.findItemType
+import de.steingaming.hqol.fabric.model.Feature
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
@@ -14,10 +15,8 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.AABB
 
-class RiftListener {
-    companion object {
-        const val COOLDOWN_MS = 700
-    }
+object Rift: Feature {
+    const val COOLDOWN_MS = 700
     object TwinclawConstants {
         const val ENTITY_MAX_DISTANCE = 20.0
         val STATUS_BAR_MATCHER = Regex(".*TWINCLAWS (?<timer>[0-9]\\.[0-9]).*")
@@ -26,11 +25,6 @@ class RiftListener {
     }
     object MelonConstants {
         val ITEM = Items.MELON_SLICE
-    }
-    init {
-        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick {
-            onTick(it)
-        })
     }
     val hotbarMutex = Mutex()
     val scope = CoroutineScope(Dispatchers.Default)
@@ -115,5 +109,9 @@ class RiftListener {
         }
     }
 
-
+    override fun init(mc: Minecraft) {
+        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick {
+            onTick(it)
+        })
+    }
 }

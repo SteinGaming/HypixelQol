@@ -1,6 +1,6 @@
 package de.steingaming.hqol.fabric.mixins;
 
-import de.steingaming.hqol.fabric.listeners.FastleapListener;
+import de.steingaming.hqol.fabric.features.Fastleap;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
@@ -13,14 +13,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class InjectClientPlayNetworkHandler {
     @Inject(method = "handleOpenScreen", at = @At("HEAD"), cancellable = true)
     public void handleOpenScreen(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
-        if (FastleapListener.openedWindow(packet))
+        if (Fastleap.openedWindow(packet))
             ci.cancel();
     }
 
 
     @Inject(method = "handleContainerContent", at = @At("HEAD"), cancellable = true)
     public void handleContainerContent(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
-        if (FastleapListener.setSlotPacket(packet))
+        if (Fastleap.setSlotPacket(packet))
             ci.cancel();
     }
 }

@@ -1,4 +1,4 @@
-package de.steingaming.hqol.fabric.listeners
+package de.steingaming.hqol.fabric.features
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
@@ -6,6 +6,7 @@ import de.steingaming.hqol.fabric.Utilities.to
 import de.steingaming.hqol.fabric.config.categories.Fastleap
 import de.steingaming.hqol.fabric.helper.ChatHelper
 import de.steingaming.hqol.fabric.helper.InventoryHelper.clickSlotUnchecked
+import de.steingaming.hqol.fabric.model.Feature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,7 +22,7 @@ import net.minecraft.world.phys.Vec3
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 
-object FastleapListener {
+object Fastleap: Feature {
     data class Window(val id: Int, val nameUnformatted: String)
     data class LeapData(val name: String, val time: Long)
 

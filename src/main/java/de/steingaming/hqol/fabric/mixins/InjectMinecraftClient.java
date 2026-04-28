@@ -1,10 +1,7 @@
 package de.steingaming.hqol.fabric.mixins;
 
-import de.steingaming.hqol.fabric.listeners.FastleapListener;
-import net.minecraft.client.KeyMapping;
+import de.steingaming.hqol.fabric.features.Fastleap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHandler;
-import net.minecraft.client.input.MouseButtonInfo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +23,7 @@ public class InjectMinecraftClient {
         if (!keyPressed)
             return;
         isDown = true;
-        if (FastleapListener.punchEvent()) {
+        if (Fastleap.punchEvent()) {
             // Consume the press when FastleapListener uses the press
             while (Minecraft.getInstance().options.keyAttack.consumeClick());
             Minecraft.getInstance().options.keyAttack.setDown(false);

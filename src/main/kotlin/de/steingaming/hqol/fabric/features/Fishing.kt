@@ -1,9 +1,9 @@
-package de.steingaming.hqol.fabric.listeners
+package de.steingaming.hqol.fabric.features
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
-import de.steingaming.hqol.fabric.Utilities
 import de.steingaming.hqol.fabric.config.Config.Range
 import de.steingaming.hqol.fabric.helper.ChatHelper
+import de.steingaming.hqol.fabric.model.Feature
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -16,40 +16,30 @@ import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.phys.Vec3
 import kotlin.time.Duration.Companion.milliseconds
 
-class FishingListener {
-    init {
-        Minecraft.getInstance().soundManager.addListener { a, b, c ->
-            this.onSound(a, b, c)
+object Fishing: Feature {
+
+    private val COROUTINE_SCOPE = CoroutineScope(Dispatchers.Default)
+
+    var fishMutex: Mutex = Mutex()
+    var fishJob: Job? = null
+
+    @JvmStatic
+    fun launchFishJob(range: Range): Job = GlobalScope.launch {
+        val config by HypixelQolFabric
+        val mc = Minecraft.getInstance()
+
+        delay(range.getRandomValue().milliseconds)
+        mc.execute {
+            mc.startUseItem()
         }
-        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick {
-            onTick(it)
-        })
-    }
 
-    companion object {
-        private val COROUTINE_SCOPE = CoroutineScope(Dispatchers.Default)
-
-        var fishMutex: Mutex = Mutex()
-        var fishJob: Job? = null
-
-        @JvmStatic
-        fun launchFishJob(range: Range): Job = GlobalScope.launch {
-            val config by HypixelQolFabric
-            val mc = Minecraft.getInstance()
-
-            delay(range.getRandomValue().milliseconds)
-            mc.execute {
-                mc.startUseItem()
-            }
-
-            delay(config.fishing.timings.castRodDelay.getRandomValue().milliseconds)
-            mc.execute {
-                mc.startUseItem()
-            }
-
-            // Post delay
-            delay(500.milliseconds)
+        delay(config.fishing.timings.castRodDelay.getRandomValue().milliseconds)
+        mc.execute {
+            mc.startUseItem()
         }
+
+        // Post delay
+        delay(500.milliseconds)
     }
 
     fun onSound(instance: SoundInstance, soundSet: WeighedSoundEvents, range: Float) = runBlocking onSound@{
@@ -117,5 +107,12 @@ class FishingListener {
         }
     }
 
-
+    override fun init(mc: Minecraft) {
+        Minecraft.getInstance().soundManager.addListener { a, b, c ->
+            this.onSound(a, b, c)
+        }
+        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick {
+            onTick(it)
+        })
+    }
 }

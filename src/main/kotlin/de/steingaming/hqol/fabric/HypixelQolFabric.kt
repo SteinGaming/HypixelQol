@@ -5,12 +5,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
 import de.steingaming.hqol.fabric.helper.ChatHelper
-import de.steingaming.hqol.fabric.listeners.FastleapListener
-import de.steingaming.hqol.fabric.listeners.FishingListener
-import de.steingaming.hqol.fabric.listeners.RiftListener
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import de.steingaming.hqol.fabric.features.Fastleap
+import de.steingaming.hqol.fabric.features.Fishing
+import de.steingaming.hqol.fabric.features.Rift
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
@@ -33,6 +30,8 @@ class HypixelQolFabric: ModInitializer {
             return INSTANCE.configManager.config
         }
         val RANDOM = Random(System.currentTimeMillis())
+
+        val FEATURE_LIST = listOf(Fastleap, Fishing, Rift)
     }
 
     lateinit var configManager: ConfigManager
@@ -50,13 +49,18 @@ class HypixelQolFabric: ModInitializer {
 
         configManager = ConfigManager(configPath)
 
-        ClientLifecycleEvents.CLIENT_STARTED.register { client: Minecraft? ->
-            FishingListener()
-            RiftListener()
-            FastleapListener
+        ClientLifecycleEvents.CLIENT_STARTED.register { client: Minecraft ->
+            for (feature in FEATURE_LIST) {
+                feature.init(client)
+            }
         }
 
         ClientCommandRegistrationCallback.EVENT.register(ClientCommandRegistrationCallback { source, registryAccess ->
+            for (feature in FEATURE_LIST) {
+                for (command in feature.registerCommands()) {
+                    source.register(command)
+                }
+            }
             source.register(LiteralArgumentBuilder.literal<FabricClientCommandSource>("hqol").executes {
                 it.source.client.apply {
                     setScreenAndShow(configManager.config.displayConfigUI(screen))

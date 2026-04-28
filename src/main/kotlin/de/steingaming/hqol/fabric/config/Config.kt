@@ -1,7 +1,6 @@
 package de.steingaming.hqol.fabric.config
 
 import com.google.gson.annotations.Expose
-import com.mojang.authlib.minecraft.client.MinecraftClient
 import com.mojang.blaze3d.platform.InputConstants
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.config.categories.Fastleap
