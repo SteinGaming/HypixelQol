@@ -16,11 +16,9 @@ import net.minecraft.world.phys.Vec3
 // Most of the code here is very much inspired by SkyHanni, as getting the camera to sync to the actual location
 // is somehow hard?
 object RenderHelper {
-    var camera: Camera? = null
     var tickCounter: DeltaTracker? = null
     @JvmStatic
-    fun beginRender(camera: Camera, tickCounter: DeltaTracker) {
-        this.camera = camera
+    fun beginRender(tickCounter: DeltaTracker) {
         this.tickCounter = tickCounter
     }
 
