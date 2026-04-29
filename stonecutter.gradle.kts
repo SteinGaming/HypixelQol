@@ -25,9 +25,11 @@ stonecutter parameters {
         string(current.parsed < "26.1") {
             replace("ContainerInput", "ClickType")
             replace("ClientCommands", "ClientCommandManager")
+            replace("LevelRenderContext", "WorldRenderContext")
         }
         string(current.parsed >= "26.1") {
             replace("ClientCommandManager", "ClientCommands")
+            replace("WorldRenderContext", "LevelRenderContext")
         }
     }
 }

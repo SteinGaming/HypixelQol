@@ -58,7 +58,7 @@ dependencies {
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
 
     //modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
-    fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0", "fabric-command-api-v2", "fabric-sound-api-v1")
+    fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0", "fabric-command-api-v2", "fabric-sound-api-v1", "fabric-renderer-api-v1", "fabric-rendering-v1", "fabric-content-registries-v0", "fabric-registry-sync-v0")
 }
 
 loom {
