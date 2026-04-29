@@ -24,7 +24,7 @@ object Fishing: Feature {
     var fishJob: Job? = null
 
     @JvmStatic
-    fun launchFishJob(range: Range): Job = GlobalScope.launch {
+    fun launchFishJob(range: Range): Job = COROUTINE_SCOPE.launch {
         val config by HypixelQolFabric
         val mc = Minecraft.getInstance()
 
