@@ -1,5 +1,7 @@
 package de.steingaming.hqol.fabric.config
 
+import com.google.gson.ExclusionStrategy
+import com.google.gson.FieldAttributes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import de.steingaming.hqol.fabric.HypixelQolFabric
@@ -11,7 +13,15 @@ import kotlin.io.path.*
 class ConfigManager(val configPath: Path) {
     companion object {
         val GSON: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping()
-            .excludeFieldsWithModifiers(Modifier.TRANSIENT).create()
+            .excludeFieldsWithModifiers(Modifier.TRANSIENT).setExclusionStrategies(object : ExclusionStrategy {
+                override fun shouldSkipField(f: FieldAttributes): Boolean {
+                    return f.name == "Companion" || f.hasModifier(Modifier.STATIC)
+                }
+
+                override fun shouldSkipClass(clazz: Class<*>): Boolean {
+                    return clazz.name == "Companion"
+                }
+            }).create()
     }
     val updateListeners: MutableList<(Config) -> Unit> = mutableListOf()
 
