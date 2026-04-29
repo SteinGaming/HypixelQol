@@ -79,7 +79,7 @@ object Fastleap: Feature {
             return false
         }
 
-        var (slot, itemStack) = packet.items!!.withIndex().find { (i, item) ->
+        var (slot, itemStack) = packet.items.withIndex().find { (i, item) ->
             listOf(item.hoverName, item.displayName, item.customName)
                 .any {
                     (it?.tryCollapseToString() ?: it?.string)?.cleanupColorCodes()
@@ -95,7 +95,7 @@ object Fastleap: Feature {
             val player = mc.player!!
             delay(random.nextLong(config.timings.lower.toLong(), config.timings.upper.toLong()).also { debugMessage("Waiting $it ms") }.milliseconds)
             debugMessage("Sending Packet")
-            debugMessage("Window ID: ${mc.player?.containerMenu?.containerId}; Item name for slot: ${player.containerMenu?.getSlot(slot)?.item?.hoverName?.string?.cleanupColorCodes()?.lowercase()}")
+            debugMessage("Window ID: ${mc.player?.containerMenu?.containerId}; Item name for slot: ${player.containerMenu.getSlot(slot).item.hoverName.string.cleanupColorCodes().lowercase()}")
             clickSlotUnchecked(
                 windowId, slot, 0, ContainerInput.PICKUP, player
             )
@@ -174,7 +174,7 @@ object Fastleap: Feature {
         if (!config.enabled) return false
         val player = Minecraft.getInstance().player ?: return false
 
-        val name = player.mainHandItem?.hoverName?.string?.cleanupColorCodes() ?: return false
+        val name = player.mainHandItem.hoverName.string.cleanupColorCodes()
         if (!LEAP_REGEX.matches(name)) return false
         if (currentLeap?.time?.let { it > System.currentTimeMillis() + 2000 } ?: false) return false
         if (appendFastLeap()) {

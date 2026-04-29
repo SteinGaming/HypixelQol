@@ -77,7 +77,7 @@ object Fishing: Feature {
         val catching = fishHook.level().getEntities(
             EntityType.ARMOR_STAND, fishHook.boundingBox.inflate(.0, 0.5, .0)
         ) {
-            it.displayName?.string == "!!!"
+            it.displayName.string == "!!!"
         }.isNotEmpty()
 
         if (!catching) return@runBlocking
