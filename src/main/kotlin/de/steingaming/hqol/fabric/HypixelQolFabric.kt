@@ -1,13 +1,13 @@
 package de.steingaming.hqol.fabric
 
+import de.steingaming.hqol.fabric.features.Fastleap
+import de.steingaming.hqol.fabric.features.Fishing
+import de.steingaming.hqol.fabric.features.Rift
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
 import de.steingaming.hqol.fabric.helper.ChatHelper
-import de.steingaming.hqol.fabric.features.Fastleap
-import de.steingaming.hqol.fabric.features.Fishing
-import de.steingaming.hqol.fabric.features.Rift
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
@@ -55,13 +55,11 @@ class HypixelQolFabric: ModInitializer {
             }
         }
 
-        ClientCommandRegistrationCallback.EVENT.register(ClientCommandRegistrationCallback { source, registryAccess ->
+        ClientCommandRegistrationCallback.EVENT.register(ClientCommandRegistrationCallback { dispatcher, registryAccess ->
             for (feature in FEATURE_LIST) {
-                for (command in feature.registerCommands()) {
-                    source.register(command)
-                }
+                feature.registerCommands(dispatcher, registryAccess)
             }
-            source.register(LiteralArgumentBuilder.literal<FabricClientCommandSource>("hqol").executes {
+            dispatcher.register(LiteralArgumentBuilder.literal<FabricClientCommandSource>("hqol").executes {
                 it.source.client.apply {
                     setScreenAndShow(configManager.config.displayConfigUI(screen))
                 }
