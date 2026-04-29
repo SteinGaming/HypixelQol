@@ -38,11 +38,11 @@ object RenderHelper {
         val eyeHeight = player.eyeHeight
         return exactLocation(player, partialTicks).add(0.0, eyeHeight.toDouble(), 0.0).add(player.lookAngle.multiply(2.0, 2.0, 2.0))
     }
-    fun drawLineFromCrosshair(context: LevelRenderContext, pos: Vec3, color: Int) {
-        drawLine(context, crosshairPosition(), pos, color)
+    fun drawLineFromCrosshair(context: LevelRenderContext, pos: Vec3, color: Int, lineWidth: Float) {
+        drawLine(context, crosshairPosition(), pos, color, lineWidth)
     }
     fun drawLine(
-        context: LevelRenderContext, pos1: Vec3, pos2: Vec3, color: Int
+        context: LevelRenderContext, pos1: Vec3, pos2: Vec3, color: Int, lineWidth: Float
     ) {
         val normal = pos2.subtract(pos1).normalize()
         val mc = Minecraft.getInstance()
@@ -55,11 +55,11 @@ object RenderHelper {
         buf.addVertex(matrix.pose(), pos1.x.toFloat(), pos1.y.toFloat(), pos1.z.toFloat())
             .setNormal(matrix, normal.x.toFloat(), normal.y.toFloat(), normal.z.toFloat())
             .setColor(color)
-            .setLineWidth(3.0f)
+            .setLineWidth(lineWidth)
         buf.addVertex(matrix.pose(), pos2.x.toFloat(), pos2.y.toFloat(), pos2.z.toFloat())
             .setNormal(matrix, normal.x.toFloat(), normal.y.toFloat(), normal.z.toFloat())
             .setColor(color)
-            .setLineWidth(3.0f)
+            .setLineWidth(lineWidth)
         context.poseStack().popPose()
     }
     //? if < 26.1 {
