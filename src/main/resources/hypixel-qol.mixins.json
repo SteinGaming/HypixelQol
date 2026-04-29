@@ -6,6 +6,7 @@
     "InjectClientPlayNetworkHandler",
     "InjectMinecraftClient",
     "InjectChatScreen",
-    "InjectLevelRenderer"
+    "InjectLevelRenderer",
+    "InjectEntity"
   ]
 }

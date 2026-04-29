@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.config.categories.Fastleap
 import de.steingaming.hqol.fabric.config.categories.Fishing
+import de.steingaming.hqol.fabric.config.categories.Misc
 import de.steingaming.hqol.fabric.config.categories.Rift
 import io.github.notenoughupdates.moulconfig.annotations.Category
 import io.github.notenoughupdates.moulconfig.gui.GuiContext
@@ -51,6 +52,10 @@ class Config: MoulConfig() {
     @Expose
     @Category(name = "Fastleap", desc = "Fastleap feature for dungeons")
     val fastleap: Fastleap = Fastleap()
+
+    @Expose
+    @Category(name = "Misc", desc = "Random settings that don't require their own category")
+    val misc: Misc = Misc()
 
     fun displayConfigUI(previousScreen: Screen?): Screen {
         val processor = MoulConfigProcessor.withDefaults<Config>(this@Config)
