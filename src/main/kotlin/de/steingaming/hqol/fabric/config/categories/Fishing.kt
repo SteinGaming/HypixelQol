@@ -9,8 +9,6 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigEditorText
 import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 
 class Fishing {
-
-
     @Expose
     @ConfigOption(name = "Enabled", desc = "Master switch to enable this feature")
     @ConfigEditorBoolean
@@ -82,14 +80,14 @@ class Fishing {
             desc = "How long to wait at a minimum to reel the rod back in when fishing in water\n§cDO NOT SET THIS TO NEAR 0, THIS WILL HEIGHTEN YOUR CHANCES OF BEING BANNED!"
         )
         @ConfigEditorSlider(minValue = 0.0f, maxValue = 1000.0f, minStep = 1.0f)
-        var castRodDelayMin: Float = 100f
+        var castRodDelayMin: Float = 175f
         @Expose
         @ConfigOption(
             name = "Rod cast delay maximum",
             desc = "How long to wait at a maximum to reel the rod back in when fishing in water"
         )
         @ConfigEditorSlider(minValue = 0.0f, maxValue = 1000.0f, minStep = 1.0f)
-        var castRodDelayMax: Float = 150f
+        var castRodDelayMax: Float = 225f
 
         val waterPreCatchDelay: Config.Range
             get() = Config.Range(waterPreCatchDelayMin.toLong(), waterPreCatchDelayMax.toLong())
