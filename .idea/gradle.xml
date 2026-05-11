@@ -5,15 +5,17 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="26" />
+        <option name="gradleJvm" value="jbr-25" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/versions/1.21.10" />
             <option value="$PROJECT_DIR$/versions/1.21.11" />
             <option value="$PROJECT_DIR$/versions/26.1" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="true" />
+        <option name="myGradleHome" value="/usr/share/java/gradle" />
       </GradleProjectSettings>
     </option>
   </component>

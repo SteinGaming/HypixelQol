@@ -75,13 +75,13 @@ object Rift: Feature {
         val spawnedByRegex = Regex("Spawned by: $playerName")
         val spawnedByArmorStand = entities.find {
             val name = it.displayName
-            val nameString = name.tryCollapseToString() ?: name.string
+            val nameString = name?.tryCollapseToString() ?: name!!.string
             spawnedByRegex.matches(nameString.cleanupColorCodes())
         } ?: return
 
         val timer = entities.mapNotNull {
             val name = it.displayName
-            val nameString = name.tryCollapseToString() ?: name.string
+            val nameString = name?.tryCollapseToString() ?: name!!.string
             if (it.position().distanceTo(spawnedByArmorStand.position()) > 1.0) return@mapNotNull null
             val matcher = TwinclawConstants.STATUS_BAR_MATCHER.matcher(nameString.cleanupColorCodes())
             if (!matcher.find()) return@mapNotNull null
