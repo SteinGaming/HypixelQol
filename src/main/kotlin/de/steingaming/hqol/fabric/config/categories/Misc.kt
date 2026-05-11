@@ -51,4 +51,21 @@ class Misc {
         @ConfigEditorBoolean
         var nearestOnly = false
     }
+
+    @Expose
+    @ConfigOption(name = "Structure scanner", desc = "Find structures and add waypoints (currently Crystal Hollow only)")
+    @Accordion
+    var structureScanner = StructureScanner()
+
+    class StructureScanner {
+        @Expose
+        @ConfigOption(name = "Enabled", desc = "Master toggle for this feature\nCurrently finds: Mines of Divan, Corleone")
+        @ConfigEditorBoolean
+        var enabled = false
+
+        @Expose
+        @ConfigOption(name = "Automatically add to Skyblocker", desc = "Instead of asking, automatically add the structure to Skyblocker when found")
+        @ConfigEditorBoolean
+        var automaticallyAdd = false
+    }
 }

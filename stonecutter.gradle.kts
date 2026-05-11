@@ -26,10 +26,15 @@ stonecutter parameters {
             replace("ContainerInput", "ClickType")
             replace("ClientCommands", "ClientCommandManager")
             replace("LevelRenderContext", "WorldRenderContext")
+            replace("ClientLevelEvents", "ClientWorldEvents")
+            replace("START_LEVEL_TICK", "START_WORLD_TICK")
+            replace("AFTER_CLIENT_LEVEL_CHANGE", "AFTER_CLIENT_WORLD_CHANGE")
         }
         string(current.parsed >= "26.1") {
             replace("ClientCommandManager", "ClientCommands")
             replace("WorldRenderContext", "LevelRenderContext")
+            replace("ClientWorldEvents", "ClientLevelEvents")
+            replace("AFTER_CLIENT_WORLD_CHANGE", "AFTER_CLIENT_LEVEL_CHANGE")
         }
     }
 }

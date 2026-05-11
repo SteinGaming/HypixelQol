@@ -8,6 +8,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
 import de.steingaming.hqol.fabric.features.EntityPointer
+import de.steingaming.hqol.fabric.features.StructureScanner
 import de.steingaming.hqol.fabric.helper.ChatHelper
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
@@ -32,7 +33,7 @@ class HypixelQolFabric: ModInitializer {
         }
         val RANDOM = Random(System.currentTimeMillis())
 
-        val FEATURE_LIST = listOf(EntityPointer, Fastleap, Fishing, Rift)
+        val FEATURE_LIST = listOf(EntityPointer, Fastleap, Fishing, Rift, StructureScanner)
     }
 
     lateinit var configManager: ConfigManager
