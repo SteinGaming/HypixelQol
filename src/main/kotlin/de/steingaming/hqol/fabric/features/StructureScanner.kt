@@ -54,7 +54,7 @@ object StructureScanner: Feature {
             val chunk = chunks.get(i) ?: continue
             if (chunk.pos in lookedChunks) continue
             var unloadedBlocksRequired = false
-            for ((structName, structure) in unfoundStructures.entries) {
+            for ((structName, structure) in unfoundStructures.toMap().entries) {
                 chunk.findBlocks({ originState ->
                     structure.originBlock.first(originState)
                 }, { originPos, originState ->
@@ -82,7 +82,7 @@ object StructureScanner: Feature {
                     if (config.automaticallyAdd) {
                         ChatHelper.sendToChat("Found structure \"$structName\"! Added automatically using Skyblocker.")
                         ClientCommands.getActiveDispatcher()?.execute(
-                            "/skyblocker crystalWaypoints add ${centerPos.x} ${centerPos.y} ${centerPos.z} ${structure.skyblockerStructureName}",
+                            "skyblocker crystalWaypoints add ${centerPos.x} ${centerPos.y} ${centerPos.z} ${structure.skyblockerStructureName}",
                             Minecraft.getInstance().connection!!.suggestionsProvider as FabricClientCommandSource
                         )
                     } else
