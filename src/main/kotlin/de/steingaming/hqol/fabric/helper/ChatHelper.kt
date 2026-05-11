@@ -6,9 +6,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object ChatHelper {
-    val messageDeque = ArrayDeque<String>()
+    val messageDeque = ArrayDeque<Component>()
 
-    fun sendToChat(msg: String) {
+    fun sendToChat(msg: Component) {
         if (!RenderSystem.isOnRenderThread()) {
             messageDeque.add(msg)
             return
@@ -17,9 +17,12 @@ object ChatHelper {
         Minecraft.getInstance().gui.chat.addServerSystemMessage(
         //?} else
         //Minecraft.getInstance().gui.chat.addMessage(
-            Component.nullToEmpty(msg)
+            msg
         )
     }
+
+    fun sendToChat(msg: String) =
+        sendToChat(Component.nullToEmpty(msg))
 
     fun init() {
         ClientTickEvents.START_CLIENT_TICK.register {
