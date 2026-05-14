@@ -155,22 +155,28 @@ object StructureScanner: Feature {
         map["Corleone Bridge"] = StructureData(
             "Corleone",
             { state: BlockState ->
-                state.block == Blocks.NETHERRACK
+                state.block == Blocks.FIRE
             } to { _, _ -> true },
             listOf(
-                BlockPos(-1, 0, 0) to { _, _, state ->
+                BlockPos(0, -1, 0) to { _, _, state ->
+                    state.block == Blocks.STONE
+                },
+                BlockPos(0, -2, 0) to { _, _, state ->
                     state.block == Blocks.STONE_BRICK_STAIRS && state.getValue(StairBlock.HALF) == Half.TOP
                 },
-                BlockPos(0, 0, -1) to { _, _, state ->
+                BlockPos(-1, -1, 0) to { _, _, state ->
                     state.block == Blocks.STONE_BRICK_STAIRS && state.getValue(StairBlock.HALF) == Half.TOP
                 },
-                BlockPos(1, 0, 0) to { _, _, state ->
+                BlockPos(0, -1, -1) to { _, _, state ->
                     state.block == Blocks.STONE_BRICK_STAIRS && state.getValue(StairBlock.HALF) == Half.TOP
                 },
-                BlockPos(0, 0, 1) to { _, _, state ->
+                BlockPos(1, -1, 0) to { _, _, state ->
                     state.block == Blocks.STONE_BRICK_STAIRS && state.getValue(StairBlock.HALF) == Half.TOP
                 },
-                BlockPos(-2, -2, 0) to { _, _, state ->
+                BlockPos(0, -1, 1) to { _, _, state ->
+                    state.block == Blocks.STONE_BRICK_STAIRS && state.getValue(StairBlock.HALF) == Half.TOP
+                },
+                BlockPos(-2, -3, 0) to { _, _, state ->
                     state.block == Blocks.CYAN_TERRACOTTA
                 }
             ),
