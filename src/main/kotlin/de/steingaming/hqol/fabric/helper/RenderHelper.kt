@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext
 /*import com.mojang.blaze3d.vertex.PoseStack
 import net.fabricmc.fabric.api.client.rendering.v1.world.LevelRenderContext
 *///?}
-import net.minecraft.client.Camera
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.Entity

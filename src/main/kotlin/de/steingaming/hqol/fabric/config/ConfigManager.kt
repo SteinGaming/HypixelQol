@@ -59,7 +59,7 @@ class ConfigManager(val configPath: Path) {
 
     private fun parseConfig(str: String): Config {
         return try {
-            GSON.fromJson<Config>(str, Config::class.java)
+            GSON.fromJson(str, Config::class.java)
         } catch (e: Exception) {
             HypixelQolFabric.LOGGER.error("Failed to parse config from $configPath")
             e.printStackTrace()

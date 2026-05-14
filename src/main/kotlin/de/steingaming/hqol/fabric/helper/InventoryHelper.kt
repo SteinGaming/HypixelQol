@@ -33,28 +33,28 @@ object InventoryHelper {
 
         val slots: NonNullList<Slot> = containerMenu.slots
         val slotCount = slots.size
-        val itemsBeforeClick: MutableList<ItemStack?> = Lists.newArrayListWithCapacity<ItemStack?>(slotCount)
+        val itemsBeforeClick: MutableList<ItemStack?> = Lists.newArrayListWithCapacity(slotCount)
 
         for (slot in slots) {
-            itemsBeforeClick.add(slot.getItem().copy())
+            itemsBeforeClick.add(slot.item.copy())
         }
 
         containerMenu.clicked(slotNum, buttonNum, containerInput, player)
-        val changedSlots: Int2ObjectMap<HashedStack> = Int2ObjectOpenHashMap<HashedStack>()
+        val changedSlots: Int2ObjectMap<HashedStack> = Int2ObjectOpenHashMap()
 
         for (i in 0..<slotCount) {
-            val before = itemsBeforeClick.get(i) as ItemStack
-            val after = slots.get(i).getItem()
+            val before = itemsBeforeClick[i] as ItemStack
+            val after = slots[i].item
             if (!ItemStack.matches(before, after)) {
                 changedSlots.put(i, HashedStack.create(after, connection.decoratedHashOpsGenenerator()))
             }
         }
 
-        val carriedItem = HashedStack.create(containerMenu.getCarried(), connection.decoratedHashOpsGenenerator())
+        val carriedItem = HashedStack.create(containerMenu.carried, connection.decoratedHashOpsGenenerator())
         connection.send(
                 ServerboundContainerClickPacket(
                     containerId,
-                    containerMenu.getStateId(),
+                    containerMenu.stateId,
                     Shorts.checkedCast(slotNum.toLong()),
                     SignedBytes.checkedCast(buttonNum.toLong()),
                     containerInput,

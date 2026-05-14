@@ -58,7 +58,7 @@ class Config: MoulConfig() {
     val misc: Misc = Misc()
 
     fun displayConfigUI(previousScreen: Screen?): Screen {
-        val processor = MoulConfigProcessor.withDefaults<Config>(this@Config)
+        val processor = MoulConfigProcessor.withDefaults(this@Config)
         val driver = ConfigProcessorDriver(processor)
         driver.warnForPrivateFields = false
         driver.processConfig(this@Config)

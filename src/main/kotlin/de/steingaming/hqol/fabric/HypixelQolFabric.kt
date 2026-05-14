@@ -23,7 +23,6 @@ import kotlin.reflect.KProperty
 class HypixelQolFabric: ModInitializer {
 
     companion object {
-        const val MOD_ID = "hypixelqol"
         val LOGGER = LogManager.getLogger(HypixelQolFabric::class.java)!!
 
         lateinit var INSTANCE: HypixelQolFabric
@@ -38,7 +37,6 @@ class HypixelQolFabric: ModInitializer {
 
     lateinit var configManager: ConfigManager
 
-    @Suppress("UnusedExpression")
     override fun onInitialize() {
         INSTANCE = this
         LOGGER.info("Initializing HypixelQolFabric...")

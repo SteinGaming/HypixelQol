@@ -17,7 +17,7 @@ public class InjectChatScreen extends Screen {
     }
 
     @Inject(method = "keyPressed", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V"))
-    public void setScreen(KeyEvent keyEvent, CallbackInfoReturnable<Boolean> cir) {
+    public void setScreen(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (Minecraft.getInstance().screen != this)
             cir.setReturnValue(true);
     }
