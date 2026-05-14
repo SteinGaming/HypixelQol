@@ -79,7 +79,7 @@ object Fastleap: Feature {
             return false
         }
 
-        var (slot, itemStack) = packet.items.withIndex().find { (i, item) ->
+        var (slot, itemStack) = packet.items.withIndex().find { (_, item) ->
             listOf(item.hoverName, item.displayName, item.customName)
                 .any {
                     (it?.tryCollapseToString() ?: it?.string)?.cleanupColorCodes()
@@ -144,7 +144,7 @@ object Fastleap: Feature {
     }
 
     fun findPlayerByNameExistent(playerName: String): String? {
-        if (playerName.isBlank()) return null;
+        if (playerName.isBlank()) return null
         val player = Minecraft.getInstance().level?.players()?.firstOrNull {
             it.gameProfile.name.equals(playerName, true)
         }

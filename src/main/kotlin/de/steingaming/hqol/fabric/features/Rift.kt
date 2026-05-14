@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.AABB
+import kotlin.time.Duration.Companion.milliseconds
 
 object Rift: Feature {
     const val COOLDOWN_MS = 700
@@ -91,6 +92,10 @@ object Rift: Feature {
         if (timer > twinclawAutoIce.triggerPoint || hotbarMutex.isLocked) return
 
         val slot = findItemType(client, TwinclawConstants.ITEM) ?: return
+        runBlocking {
+            if (twinclawAutoIce.randomDelay != 0f)
+                delay(HypixelQolFabric.RANDOM.nextLong((twinclawAutoIce.randomDelay * 1000f).toLong()).milliseconds)
+        }
         clickSlotAndReturnCoroutine(client, slot)
     }
 
