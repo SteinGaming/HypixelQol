@@ -7,6 +7,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
+import de.steingaming.hqol.fabric.events.IslandChangedEvent
 import de.steingaming.hqol.fabric.features.EntityPointer
 import de.steingaming.hqol.fabric.features.StructureScanner
 import de.steingaming.hqol.fabric.helper.ChatHelper
@@ -15,6 +16,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.loader.api.FabricLoader
+import net.hypixel.modapi.HypixelModAPI
+import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket
 import net.minecraft.client.Minecraft
 import org.apache.logging.log4j.LogManager
 import kotlin.random.Random
@@ -40,6 +43,10 @@ class HypixelQolFabric: ModInitializer {
     override fun onInitialize() {
         INSTANCE = this
         LOGGER.info("Initializing HypixelQolFabric...")
+
+        HypixelModAPI.getInstance().createHandler(ClientboundLocationPacket::class.java) {
+            IslandChangedEvent.EVENT.invoker().onIslandChanged(IslandChangedEvent.Location(it))
+        }
 
         // Initialize Helpers
         ChatHelper.init()

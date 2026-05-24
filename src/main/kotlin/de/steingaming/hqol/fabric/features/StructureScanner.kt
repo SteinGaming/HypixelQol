@@ -1,12 +1,14 @@
 package de.steingaming.hqol.fabric.features
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
+import de.steingaming.hqol.fabric.events.IslandChangedEvent
 import de.steingaming.hqol.fabric.helper.ChatHelper
 import de.steingaming.hqol.fabric.model.Feature
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents
+import net.hypixel.data.type.GameType
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
@@ -34,10 +36,14 @@ object StructureScanner: Feature {
         val relativeCenterBlock: BlockPos
     )
 
+    var inCrystalHollows = false
     var initialStructures = mapOf<String, StructureData>()
     var unfoundStructures = mutableMapOf<String, StructureData>()
 
     override fun init(mc: Minecraft) {
+        IslandChangedEvent.EVENT.register { location ->
+            inCrystalHollows = location.serverType is GameType && location.serverType == GameType.SKYBLOCK && location.map == "Crystal Hollows"
+        }
         initialStructures = getStructures()
         unfoundStructures = initialStructures.toMutableMap()
         ClientTickEvents.START_LEVEL_TICK.register(::onTick)
@@ -46,6 +52,7 @@ object StructureScanner: Feature {
     val lookedChunks = mutableListOf<ChunkPos>()
 
     fun onTick(level: ClientLevel) {
+        if (!inCrystalHollows) return
         val config = HypixelQolFabric.INSTANCE.configManager.config.misc.structureScanner
         if (!config.enabled) return
         val viewRange = level.chunkSource.storage.viewRange
