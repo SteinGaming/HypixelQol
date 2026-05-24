@@ -34,6 +34,9 @@ repositories {
     maven("https://repo.steingaming.de/releases/") {
         name = "NEU-custom"
     }
+    maven("https://repo.hypixel.net/repository/Hypixel") {
+        name = "Hypixel"
+    }
     //maven("https://maven.notenoughupdates.org/releases/")
 }
 val shadowModImpl by configurations.creating {
@@ -56,7 +59,7 @@ dependencies {
     modImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     shadowModImpl("org.notenoughupdates.moulconfig:modern-${sc.current.version}:${project.property("moulconfig.version")}")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-
+    modImplementation("net.hypixel:mod-api:1.0.2")
     //modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
     fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0", "fabric-command-api-v2", "fabric-sound-api-v1", "fabric-renderer-api-v1", "fabric-rendering-v1", "fabric-content-registries-v0", "fabric-registry-sync-v0")
 }
