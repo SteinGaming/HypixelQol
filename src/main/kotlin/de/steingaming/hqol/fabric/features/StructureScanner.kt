@@ -22,9 +22,13 @@ import net.minecraft.world.level.block.RotatedPillarBlock
 import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.SlabBlock
 import net.minecraft.world.level.block.StairBlock
+import net.minecraft.world.level.block.WallBlock
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.Half
 import net.minecraft.world.level.block.state.properties.SlabType
+import net.minecraft.world.level.block.state.properties.StairsShape
+import net.minecraft.world.level.material.FlowingFluid
+import net.minecraft.world.level.material.Fluids
 import kotlin.to
 
 
@@ -188,6 +192,147 @@ object StructureScanner: Feature {
                 }
             ),
             BlockPos(-22, -2, 0)
+        )
+        map["Jungle Temple"] = StructureData(
+            "Jungle Temple",
+            { state: BlockState ->
+                state.block == Blocks.STONE_BRICK_STAIRS &&
+                        state.getValue(StairBlock.HALF) == Half.TOP &&
+                        state.getValue(StairBlock.FACING) == Direction.NORTH &&
+                        state.getValue(StairBlock.SHAPE) == StairsShape.OUTER_LEFT
+            }
+                    to { _, _ -> true },
+            listOf(
+                BlockPos(0, 1, 0) to { _, _, state ->
+                    state.block == Blocks.STONE_BRICK_SLAB &&
+                            state.getValue(SlabBlock.TYPE) == SlabType.BOTTOM
+                },
+                BlockPos(0, 0, -1) to { _, _, state ->
+                    state.block == Blocks.STONE_BRICK_STAIRS &&
+                            state.getValue(StairBlock.HALF) == Half.TOP &&
+                            state.getValue(StairBlock.FACING) == Direction.WEST &&
+                            state.getValue(StairBlock.SHAPE) == StairsShape.STRAIGHT
+                },
+                BlockPos(-1, 1, -1) to { _, _, state ->
+                    state.block == Blocks.FIRE
+                }
+            ),
+            BlockPos(4, 3, -8)
+        )
+        map["Khazad-d\u00FBm"] = StructureData(
+            "Khazad-d\u00FBm",
+            { state: BlockState ->
+                state.fluidState.type == Fluids.FLOWING_LAVA &&
+                        state.fluidState.getValue(FlowingFluid.FALLING)
+            } to { _, _ -> true },
+            listOf(
+                BlockPos(1, 0, 1) to { _, _, state ->
+                    state.fluidState.type == Fluids.FLOWING_LAVA &&
+                            state.fluidState.getValue(FlowingFluid.FALLING)
+                },
+                BlockPos(2, 0, 2) to { _, _, state ->
+                    state.fluidState.type == Fluids.FLOWING_LAVA &&
+                            state.fluidState.getValue(FlowingFluid.FALLING)
+                },
+                BlockPos(0, 1, -2) to { _, _, state ->
+                    state.block == Blocks.COBBLESTONE_WALL &&
+                            state.getValue(WallBlock.UP)
+                }
+            ),
+            BlockPos(-14, 13, -1)
+        )
+        map["King Yolkar"] = StructureData(
+            "King Yolkar",
+            { state: BlockState ->
+                state.block == Blocks.DARK_OAK_STAIRS &&
+                        state.getValue(StairBlock.HALF) == Half.BOTTOM &&
+                        state.getValue(StairBlock.SHAPE) == StairsShape.STRAIGHT
+            } to { _, _ -> true },
+            listOf(
+                BlockPos(1, -1, 0) to { _, _, state ->
+                    state.block == Blocks.RED_WOOL
+                },
+                BlockPos(2, -1, 0) to { _, _, state ->
+                    state.block == Blocks.RED_WOOL
+                },
+                BlockPos(2, -1, -1) to { _, _, state ->
+                    state.block == Blocks.RED_WOOL
+                },
+            ),
+            BlockPos(2, 0, 0)
+        )
+        map["Goblin Queen's Den"] = StructureData(
+            "Goblin Queen's Den",
+            { state: BlockState ->
+                state.block == Blocks.CAULDRON
+            } to { _, _ -> true },
+            listOf(
+                BlockPos(0, 1, 0) to { _, _, state ->
+                    state.block == Blocks.FIRE
+                },
+                BlockPos(-1, -3, -1) to { _, _, state ->
+                    state.block == Blocks.SPRUCE_STAIRS
+                },
+            ),
+            BlockPos(3, 3, 3)
+        )
+        map["Lost Precursor City"] = StructureData(
+            "Lost Precursor City",
+            { state: BlockState ->
+                state.block == Blocks.FLOWER_POT
+            } to { _, _ -> true },
+            listOf(
+                BlockPos(-1, 0, 0) to { _, _, state ->
+                    state.block == Blocks.QUARTZ_STAIRS &&
+                            state.getValue(StairBlock.FACING) == Direction.WEST &&
+                            state.getValue(StairBlock.HALF) == Half.BOTTOM
+                },
+                BlockPos(5, 0, 5) to { _, _, state ->
+                    state.block == Blocks.PLAYER_HEAD
+                },
+            ),
+            BlockPos(0, 0, -1)
+        )
+        map["Key Guardian Tall"] = StructureData(
+            "Key Guardian",
+            { state: BlockState ->
+                state.block == Blocks.HOPPER
+            } to { _, _ -> true },
+            listOf(
+                BlockPos(-3, 0, 3) to { _, _, state ->
+                    state.block == Blocks.HOPPER
+                },
+                BlockPos(-2, -3, 1) to { _, _, state ->
+                    state.block == Blocks.STONE_BRICK_SLAB &&
+                            state.getValue(SlabBlock.TYPE) == SlabType.BOTTOM
+                }
+            ),
+            BlockPos(-2, -3, 1)
+        )
+        map["Key Guardian Temple"] = StructureData(
+            "Key Guardian",
+            { state: BlockState ->
+                state.block == Blocks.JUNGLE_STAIRS &&
+                        state.getValue(StairBlock.HALF) == Half.BOTTOM
+            } to { _, _ -> true },
+            listOf(
+                BlockPos(-1, -1, 0) to { _, _, state ->
+                    state.block == Blocks.GRANITE
+                },
+                BlockPos(-1, -2, 0) to { _, _, state ->
+                    state.block == Blocks.POLISHED_GRANITE
+                },
+                BlockPos(-5, -1, 0) to { _, _, state ->
+                    state.block == Blocks.GRANITE
+                },
+                BlockPos(-5, -1, 0) to { _, _, state ->
+                    state.block == Blocks.POLISHED_GRANITE
+                },
+                BlockPos(0, -4, -1) to { _, _, state ->
+                    state.block == Blocks.STONE_BRICK_STAIRS
+                },
+            ),
+            BlockPos(-3, -1, 2)
         )
         return map
     }
