@@ -1,35 +1,32 @@
 package de.steingaming.hqol.fabric.features
 
+import com.mojang.brigadier.Command
+import com.mojang.brigadier.CommandDispatcher
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.events.IslandChangedEvent
 import de.steingaming.hqol.fabric.helper.ChatHelper
 import de.steingaming.hqol.fabric.model.Feature
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.hypixel.data.type.GameType
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.commands.CommandBuildContext
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.level.ChunkPos
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.RotatedPillarBlock
-import net.minecraft.world.level.block.Rotation
-import net.minecraft.world.level.block.SlabBlock
-import net.minecraft.world.level.block.StairBlock
-import net.minecraft.world.level.block.WallBlock
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.Half
 import net.minecraft.world.level.block.state.properties.SlabType
 import net.minecraft.world.level.block.state.properties.StairsShape
 import net.minecraft.world.level.material.FlowingFluid
 import net.minecraft.world.level.material.Fluids
-import kotlin.to
 
 
 object StructureScanner: Feature {
@@ -53,6 +50,18 @@ object StructureScanner: Feature {
         ClientTickEvents.START_LEVEL_TICK.register(::onTick)
         ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register(::onWorldChange)
     }
+
+    override fun registerCommands(
+        dispatcher: CommandDispatcher<FabricClientCommandSource>,
+        registryAccess: CommandBuildContext
+    ) {
+        dispatcher.register(ClientCommands.literal("hqolforcess").executes {
+            ChatHelper.sendToChat("Forcibly enabling Structure Scanner for this level...")
+            inCrystalHollows = true
+            return@executes Command.SINGLE_SUCCESS
+        })
+    }
+
     val lookedChunks = mutableListOf<ChunkPos>()
 
     fun onTick(level: ClientLevel) {
@@ -325,10 +334,10 @@ object StructureScanner: Feature {
                 BlockPos(-5, -1, 0) to { _, _, state ->
                     state.block == Blocks.GRANITE
                 },
-                BlockPos(-5, -1, 0) to { _, _, state ->
+                BlockPos(-5, -2, 0) to { _, _, state ->
                     state.block == Blocks.POLISHED_GRANITE
                 },
-                BlockPos(0, -4, -1) to { _, _, state ->
+                BlockPos(0, -3, -1) to { _, _, state ->
                     state.block == Blocks.STONE_BRICK_STAIRS
                 },
             ),
