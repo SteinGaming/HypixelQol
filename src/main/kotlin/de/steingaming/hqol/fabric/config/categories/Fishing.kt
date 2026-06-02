@@ -19,31 +19,6 @@ class Fishing {
     @Accordion
     var timings = FishingTimings()
 
-    @Expose
-    @ConfigOption(name = "Use Legacy Detection", desc = "Whether to use the (currently borked) legacy sound method.\nOnly works on 1.8.9 currently.")
-    @ConfigEditorBoolean
-    var useLegacyDetection: Boolean = false
-
-    @Expose
-    @ConfigOption(name = "Legacy options", desc = "Only useful when enabling the former toggle")
-    @Accordion
-    var legacyOptions = LegacyOptions()
-
-    class LegacyOptions {
-        @Expose
-        @ConfigOption(name = "Maximum sound distance to rod", desc = "Which radius should sounds be acknowledged, relative to the bobber?")
-        @ConfigEditorSlider(minValue = .1f, maxValue = 10f, minStep = .1f)
-        var maximumSoundDistance: Double = 0.1
-        @Expose
-        @ConfigOption(name = "Water sound path", desc = "What sound should be used for water fishing?")
-        @ConfigEditorText
-        var waterSoundPath: String = "random/splash"
-        @Expose
-        @ConfigOption(name = "Lava sound path", desc = "What sound should be used for lava fishing?")
-        @ConfigEditorText
-        var lavaSoundPath: String = "game/player/swim/splash"
-    }
-
     // TODO move to common module maybe?
     class FishingTimings {
         @Expose
@@ -97,6 +72,61 @@ class Fishing {
 
         val castRodDelay: Config.Range
             get() = Config.Range(castRodDelayMin.toLong(), castRodDelayMax.toLong())
+    }
+
+    @Expose
+    @ConfigOption(name = "Recovery", desc = "Recast when something bad happens")
+    @Accordion
+    var recovery: FishingRecovery = FishingRecovery()
+
+    class FishingRecovery {
+        @Expose
+        @ConfigOption(name = "Repair broken rod", desc = "Automatically recast rod when state is disassociated (bobber exists & texture in hand not correct)\nVery much recommended, as this happens due to desync")
+        @ConfigEditorBoolean
+        var repairDisassociatedRod: Boolean = true
+
+        @Expose
+        @ConfigOption(name = "Repair missing bobber", desc = "Automatically recast rod when bobber is not found (not recommended, but available)")
+        @ConfigEditorBoolean
+        var repairMissingBobber: Boolean = false
+
+        @Expose
+        @ConfigOption(name = "Repair mob hooked", desc = "Automatically recast rod when bobber is stuck inside of an entity")
+        @ConfigEditorBoolean
+        var repairMobHooked: Boolean = false
+    }
+
+    @Expose
+    @ConfigOption(name = "Legacy mode - §cEXPERTS ONLY, NO SUPPORT CURRENTLY", desc = "Sound method previously availible on 1.8.9")
+    @Accordion
+    var legacy: FishingLegacy = FishingLegacy()
+
+    class FishingLegacy {
+        @Expose
+        @ConfigOption(name = "Use Legacy Detection", desc = "Whether to use the legacy sound method.\n§cCURRENTLY ONLY WORKS OUTSIDE OF HYPIXEL, DO NOT ENABLE UNLESS YOU KNOW WHAT YOU ARE DOING!")
+        @ConfigEditorBoolean
+        var legacyEnabled: Boolean = false
+
+        @Expose
+        @ConfigOption(name = "Legacy options", desc = "Only useful when enabling the former toggle")
+        @Accordion
+        var legacyOptions = LegacyOptions()
+
+
+        class LegacyOptions {
+            @Expose
+            @ConfigOption(name = "Maximum sound distance to rod", desc = "Which radius should sounds be acknowledged, relative to the bobber?")
+            @ConfigEditorSlider(minValue = .1f, maxValue = 10f, minStep = .1f)
+            var maximumSoundDistance: Double = 0.1
+            @Expose
+            @ConfigOption(name = "Water sound path", desc = "What sound should be used for water fishing?")
+            @ConfigEditorText
+            var waterSoundPath: String = "random/splash"
+            @Expose
+            @ConfigOption(name = "Lava sound path", desc = "What sound should be used for lava fishing?")
+            @ConfigEditorText
+            var lavaSoundPath: String = "game/player/swim/splash"
+        }
     }
 
 }
