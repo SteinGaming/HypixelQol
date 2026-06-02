@@ -1,6 +1,7 @@
 package de.steingaming.hqol.fabric.features
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
+import de.steingaming.hqol.fabric.Utilities
 import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
 import de.steingaming.hqol.fabric.config.categories.Rift
 import de.steingaming.hqol.fabric.helper.InventoryHelper.inventoryInteractDelay
@@ -59,13 +60,8 @@ object Rift: Feature {
 
     private fun twinClawAutoIce(client: Minecraft, twinclawAutoIce: Rift.TwinclawAutoIce) {
         val playerPos = client.player?.position() ?: return
-        val box = AABB(
-            playerPos.x - TwinclawConstants.ENTITY_MAX_DISTANCE,
-            playerPos.y - TwinclawConstants.ENTITY_MAX_DISTANCE,
-            playerPos.z - TwinclawConstants.ENTITY_MAX_DISTANCE,
-            playerPos.x + TwinclawConstants.ENTITY_MAX_DISTANCE,
-            playerPos.y + TwinclawConstants.ENTITY_MAX_DISTANCE,
-            playerPos.z + TwinclawConstants.ENTITY_MAX_DISTANCE,
+        val box = Utilities.getAABBEquidistant(
+            playerPos, TwinclawConstants.ENTITY_MAX_DISTANCE
         )
 
         val entities = client.level?.getEntities(

@@ -3,6 +3,7 @@ package de.steingaming.hqol.fabric.features
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
 import de.steingaming.hqol.fabric.HypixelQolFabric
+import de.steingaming.hqol.fabric.Utilities
 import de.steingaming.hqol.fabric.config.categories.Misc
 import de.steingaming.hqol.fabric.helper.ChatHelper
 import de.steingaming.hqol.fabric.helper.CommandHelper.literal
@@ -48,8 +49,8 @@ object EntityPointer : Feature {
 
         for (entityType in list) {
             val entities = level.getEntities(
-                entityType, AABB(
-                    player.position().subtract(distance), player.position().add(distance)
+                entityType, Utilities.getAABBEquidistant(
+                    player.position(), distance
                 )
             ) { true }
             for (entity in entities) {
