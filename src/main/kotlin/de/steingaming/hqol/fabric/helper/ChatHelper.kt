@@ -1,9 +1,15 @@
 package de.steingaming.hqol.fabric.helper
 
 import com.mojang.blaze3d.systems.RenderSystem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 object ChatHelper {
     val messageDeque = ArrayDeque<Component>()
@@ -33,4 +39,17 @@ object ChatHelper {
             }
         }
     }
+
+    fun CoroutineScope.launchWithSafeguard(context: CoroutineContext = EmptyCoroutineContext,
+                                           start: CoroutineStart = CoroutineStart.DEFAULT,
+                                           block: suspend CoroutineScope.() -> Unit): Job =
+        this.launch(context, start) {
+            runCatching {
+                block()
+            }.onFailure {
+                it.printStackTrace()
+                sendToChat("§cThere was an error when running an coroutine in HypixelQol! Check logs and report to https://github.com/SteinGaming/HypixelQol if persists/stuff breaks.")
+            }
+        }
+
 }

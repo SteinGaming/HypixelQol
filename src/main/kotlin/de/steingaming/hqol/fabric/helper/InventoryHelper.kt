@@ -4,12 +4,12 @@ import com.google.common.collect.Lists
 import com.google.common.primitives.Shorts
 import com.google.common.primitives.SignedBytes
 import de.steingaming.hqol.fabric.HypixelQolFabric
+import de.steingaming.hqol.fabric.helper.ChatHelper.launchWithSafeguard
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
 import net.minecraft.core.NonNullList
 import net.minecraft.network.HashedStack
@@ -78,7 +78,7 @@ object InventoryHelper {
 
     fun clickSlotAndReturnCoroutine(scope: CoroutineScope, client: Minecraft, slot: Int): Job {
         val currentSlot = client.player!!.inventory.selectedSlot
-        return scope.launch {
+        return scope.launchWithSafeguard {
             changeSlot(client, slot)
             inventoryInteractDelay()
             client.execute { client.startUseItem() }

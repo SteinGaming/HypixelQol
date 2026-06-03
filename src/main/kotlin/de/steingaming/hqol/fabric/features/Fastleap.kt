@@ -5,12 +5,12 @@ import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
 import de.steingaming.hqol.fabric.Utilities.to
 import de.steingaming.hqol.fabric.config.categories.Fastleap
 import de.steingaming.hqol.fabric.helper.ChatHelper
+import de.steingaming.hqol.fabric.helper.ChatHelper.launchWithSafeguard
 import de.steingaming.hqol.fabric.helper.InventoryHelper.clickSlotUnchecked
 import de.steingaming.hqol.fabric.model.Feature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
@@ -90,7 +90,7 @@ object Fastleap: Feature {
         debugMessage("${itemStack.hoverName.string.cleanupColorCodes().lowercase()} matched, resetting and pressing $slot for $windowId")
 
         resetLeapAndWindow()
-        scope.launch {
+        scope.launchWithSafeguard {
             val mc = Minecraft.getInstance()
             val player = mc.player!!
             delay(random.nextLong(config.timings.lower.toLong(), config.timings.upper.toLong()).also { debugMessage("Waiting $it ms") }.milliseconds)

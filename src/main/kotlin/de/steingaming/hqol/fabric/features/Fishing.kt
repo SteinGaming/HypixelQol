@@ -4,6 +4,7 @@ import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.Utilities
 import de.steingaming.hqol.fabric.config.Config.Range
 import de.steingaming.hqol.fabric.helper.ChatHelper
+import de.steingaming.hqol.fabric.helper.ChatHelper.launchWithSafeguard
 import de.steingaming.hqol.fabric.model.Feature
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
@@ -30,7 +31,7 @@ object Fishing: Feature {
     var fishJob: Job? = null
 
     @JvmStatic
-    fun launchFishJob(range: Range): Job = COROUTINE_SCOPE.launch {
+    fun launchFishJob(range: Range): Job = COROUTINE_SCOPE.launchWithSafeguard {
         val mc = Minecraft.getInstance()
 
         delay(range.getRandomValue().milliseconds)
@@ -88,7 +89,7 @@ object Fishing: Feature {
     }
 
     private fun recoveryRecast(range: Range) {
-        COROUTINE_SCOPE.launch {
+        COROUTINE_SCOPE.launchWithSafeguard {
             delay(500.milliseconds)
             fishMutex.withLock {
                 if (fishJob?.isActive == false)

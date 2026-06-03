@@ -4,6 +4,7 @@ import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.Utilities
 import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
 import de.steingaming.hqol.fabric.config.categories.Rift
+import de.steingaming.hqol.fabric.helper.ChatHelper.launchWithSafeguard
 import de.steingaming.hqol.fabric.helper.InventoryHelper.inventoryInteractDelay
 import de.steingaming.hqol.fabric.helper.InventoryHelper.changeSlot
 import de.steingaming.hqol.fabric.helper.InventoryHelper.findItemType
@@ -99,7 +100,7 @@ object Rift: Feature {
     fun clickSlotAndReturnCoroutine(client: Minecraft, slot: Int) {
         if (!hotbarMutex.tryLock()) return
         val currentSlot = client.player!!.inventory.selectedSlot
-        scope.launch {
+        scope.launchWithSafeguard {
             changeSlot(client, slot)
             inventoryInteractDelay()
             client.execute { client.startUseItem() }
