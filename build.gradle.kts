@@ -21,7 +21,6 @@ val minecraft = sc.current.version
 val accesswidener = when {
     stonecutter.eval(minecraft, ">=26.1") -> "26.1.accesswidener"
     stonecutter.eval(minecraft, ">=1.21.11") -> "1.21.11.accesswidener"
-    stonecutter.eval(minecraft, ">=1.20.10") -> "1.21.10.accesswidener"
     else -> null
 }
 repositories {
