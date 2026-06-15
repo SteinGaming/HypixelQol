@@ -1,5 +1,6 @@
 package de.steingaming.hqol.fabric
 
+import kotlinx.coroutines.runBlocking
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
@@ -15,5 +16,13 @@ object Utilities {
         return AABB(
             position.subtract(distance), position.add(distance)
         )
+    }
+
+    inline fun <T, R> T.runCatchingBlocking(crossinline block: suspend T.() -> R): Result<R> {
+        return try {
+            runBlocking { Result.success(block()) }
+        } catch (e: Throwable) {
+            Result.failure(e)
+        }
     }
 }
