@@ -9,6 +9,7 @@ import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
 import de.steingaming.hqol.fabric.events.IslandChangedEvent
 import de.steingaming.hqol.fabric.features.EntityPointer
+import de.steingaming.hqol.fabric.features.FirmamentWarning
 import de.steingaming.hqol.fabric.features.StructureScanner
 import de.steingaming.hqol.fabric.helper.ChatHelper
 import net.fabricmc.api.ModInitializer
@@ -55,6 +56,7 @@ class HypixelQolFabric: ModInitializer {
         val configPath = fabricLoader.configDir.resolve("hypixelqol.json")
 
         configManager = ConfigManager(configPath)
+        FirmamentWarning.check()
 
         ClientLifecycleEvents.CLIENT_STARTED.register { client: Minecraft ->
             for (feature in FEATURE_LIST) {

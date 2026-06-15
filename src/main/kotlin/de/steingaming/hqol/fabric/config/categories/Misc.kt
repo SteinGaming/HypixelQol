@@ -68,4 +68,6 @@ class Misc {
         @ConfigEditorBoolean
         var automaticallyAdd = false
     }
+    @Expose
+    var firmamentWarningShown = false
 }
