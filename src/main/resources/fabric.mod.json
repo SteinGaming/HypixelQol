@@ -24,6 +24,7 @@
   "mixins": [
     "hypixel-qol.mixins.json"
   ],
+  "custom": { "firmament:hide_from_modlist": true },
   "accessWidener": "hqol-${aw_file}",
   "depends": {
     "fabricloader": ">=0.16.14",
