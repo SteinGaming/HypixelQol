@@ -141,9 +141,9 @@ object StructureScanner: Feature {
                 BlockPos(0,0,-1) to { _, _, state ->
                     state.block == Blocks.QUARTZ_PILLAR && state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y
                 }, BlockPos(1,0,0) to { _, _, state ->
-                    state.block == Blocks.LIME_WOOL
+                    state.block == Blocks.WOOL.lime
                 }, BlockPos(1,-1,0) to { _, _, state ->
-                    state.block == Blocks.LIME_WOOL
+                    state.block == Blocks.WOOL.lime
                 }
             ),
             BlockPos(4, 16, 0)
@@ -197,7 +197,7 @@ object StructureScanner: Feature {
                     state.block == Blocks.STONE_BRICK_STAIRS && state.getValue(StairBlock.HALF) == Half.TOP
                 },
                 BlockPos(-2, -3, 0) to { _, _, state ->
-                    state.block == Blocks.CYAN_TERRACOTTA
+                    state.block == Blocks.DYED_TERRACOTTA.cyan
                 }
             ),
             BlockPos(-22, -2, 0)
@@ -259,13 +259,13 @@ object StructureScanner: Feature {
             } to { _, _ -> true },
             listOf(
                 BlockPos(1, -1, 0) to { _, _, state ->
-                    state.block == Blocks.RED_WOOL
+                    state.block == Blocks.WOOL.red
                 },
                 BlockPos(2, -1, 0) to { _, _, state ->
-                    state.block == Blocks.RED_WOOL
+                    state.block == Blocks.WOOL.red
                 },
                 BlockPos(2, -1, -1) to { _, _, state ->
-                    state.block == Blocks.RED_WOOL
+                    state.block == Blocks.WOOL.red
                 },
             ),
             BlockPos(2, 0, 0)

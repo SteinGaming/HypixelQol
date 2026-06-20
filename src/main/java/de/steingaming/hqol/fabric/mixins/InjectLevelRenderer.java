@@ -19,8 +19,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class InjectLevelRenderer {
 
     //? if >= 26.1 {
-    @Inject(method = "renderLevel", at = @At(value = "HEAD"))
+
+    //? if < 26.2 {
+    /*@Inject(method = "renderLevel", at = @At(value = "HEAD"))
     private void beginRender(GraphicsResourceAllocator resourceAllocator, DeltaTracker deltaTracker, boolean renderOutline, net.minecraft.client.renderer.state.level.CameraRenderState cameraState, Matrix4fc modelViewMatrix, GpuBufferSlice terrainFog, Vector4f fogColor, boolean shouldRenderSky, ChunkSectionsToRender chunkSectionsToRender, CallbackInfo ci) {
+    *///?} else {
+    @Inject(method = "render", at = @At(value = "HEAD"))
+    private void beginRender(GraphicsResourceAllocator resourceAllocator, DeltaTracker deltaTracker, boolean renderOutline, net.minecraft.client.renderer.state.level.CameraRenderState cameraState, Matrix4fc modelViewMatrix, GpuBufferSlice terrainFog, Vector4f fogColor, boolean shouldRenderSky, CallbackInfo ci) {
+    //?}
         RenderHelper.beginRender(deltaTracker);
     }
     //?} else {

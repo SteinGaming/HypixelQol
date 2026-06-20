@@ -16,9 +16,19 @@ public class InjectChatScreen extends Screen {
         super(component);
     }
 
-    @Inject(method = "keyPressed", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V"))
+    @Inject(method = "keyPressed", cancellable = true, at =
+        //? >= 26.2 {
+            @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V")
+            //? } else
+             //@At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V")
+    )
     public void setScreen(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (Minecraft.getInstance().screen != this)
+        if (
+                //? >= 26.2 {
+                Minecraft.getInstance().gui.screen()
+                //? } else
+                //Minecraft.getInstance().screen
+                        != this)
             cir.setReturnValue(true);
     }
 }

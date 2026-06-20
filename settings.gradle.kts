@@ -20,14 +20,14 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.9.1-beta.4"
+    id("dev.kikugie.stonecutter") version "0.9.6"
     id("dev.kikugie.loom-back-compat") version "0.2"
 }
 
 stonecutter {
     create(rootProject) {
         // See https://stonecutter.kikugie.dev/wiki/start/#choosing-minecraft-versions
-        versions("1.21.11", "26.1"/*, "26.2"*/)
-        vcsVersion = "26.1"
+        versions("1.21.11", "26.1", "26.2")
+        vcsVersion = "26.2"
     }
 }

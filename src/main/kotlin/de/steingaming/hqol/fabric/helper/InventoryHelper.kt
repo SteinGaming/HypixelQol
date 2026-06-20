@@ -4,6 +4,7 @@ import com.google.common.collect.Lists
 import com.google.common.primitives.Shorts
 import com.google.common.primitives.SignedBytes
 import de.steingaming.hqol.fabric.HypixelQolFabric
+import de.steingaming.hqol.fabric.Utilities.screen
 import de.steingaming.hqol.fabric.helper.ChatHelper.launchWithSafeguard
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
@@ -94,7 +95,7 @@ object InventoryHelper {
 
     fun changeSlot(client: Minecraft, slot: Int) {
         client.execute {
-            if (client.screen != null || client.isPaused) return@execute
+            if (client.screen() != null || client.isPaused) return@execute
             client.player!!.inventory.selectedSlot = slot
         }
     }

@@ -8,6 +8,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.LevelRenderContext
 *///?}
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
+import net.minecraft.client.model.Model
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.renderer.SubmitNodeCollector
+import net.minecraft.client.renderer.SubmitNodeStorage
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.Vec3
 
@@ -46,23 +51,34 @@ object RenderHelper {
         val inverseView = mc.gameRenderer.mainCamera.position().multiply(-1.0, -1.0, -1.0)
         context.poseStack().translate(inverseView)
 
-        val buf = mc.gameRenderer.renderBuffers.bufferSource().getBuffer(
-            //? if > 1.21.10 {
-            net.minecraft.client.renderer.rendertype.RenderTypes.LINES_TRANSLUCENT
-            //?} else
-            //net.minecraft.client.renderer.RenderType.lines()
+        //? <= 26.1 {
+        /*val buf = mc.gameRenderer.renderBuffers.bufferSource().getBuffer(
+            RenderTypes.LINES_TRANSLUCENT
         )
         val matrix = context.poseStack().last()
         buf.addVertex(matrix.pose(), pos1.x.toFloat(), pos1.y.toFloat(), pos1.z.toFloat())
             .setNormal(matrix, normal.x.toFloat(), normal.y.toFloat(), normal.z.toFloat())
             .setColor(color)
-            //? if > 1.21.10
             .setLineWidth(lineWidth)
         buf.addVertex(matrix.pose(), pos2.x.toFloat(), pos2.y.toFloat(), pos2.z.toFloat())
             .setNormal(matrix, normal.x.toFloat(), normal.y.toFloat(), normal.z.toFloat())
             .setColor(color)
-            //? if > 1.21.10
             .setLineWidth(lineWidth)
+        */
+        //? } else {
+        context.submitNodeCollector().submitCustomGeometry(
+            context.poseStack(), RenderTypes.LINES_TRANSLUCENT, SubmitNodeCollector.CustomGeometryRenderer { pose, vertexConsumer ->
+                vertexConsumer.addVertex(pose, pos1.x.toFloat(), pos1.y.toFloat(), pos1.z.toFloat())
+                    .setNormal(pose, normal.x.toFloat(), normal.y.toFloat(), normal.z.toFloat())
+                    .setColor(color)
+                    .setLineWidth(lineWidth)
+                vertexConsumer.addVertex(pose, pos2.x.toFloat(), pos2.y.toFloat(), pos2.z.toFloat())
+                    .setNormal(pose, normal.x.toFloat(), normal.y.toFloat(), normal.z.toFloat())
+                    .setColor(color)
+                    .setLineWidth(lineWidth)
+            }
+        )
+        //? }
         context.poseStack().popPose()
     }
     //? if < 26.1 {

@@ -2,7 +2,7 @@
 plugins {
     idea
     java
-    kotlin("jvm") version "2.3.20"
+    kotlin("jvm") version "2.4.0"
     id("dev.kikugie.loom-back-compat")
     id("com.gradleup.shadow") version "9.3.1"
 }
@@ -19,6 +19,7 @@ val requiredJava = when {
 }
 val minecraft = sc.current.version
 val accesswidener = when {
+    stonecutter.eval(minecraft, ">=26.2") -> "26.2.accesswidener"
     stonecutter.eval(minecraft, ">=26.1") -> "26.1.accesswidener"
     stonecutter.eval(minecraft, ">=1.21.11") -> "1.21.11.accesswidener"
     else -> null
@@ -92,14 +93,14 @@ tasks {
         inputs.property("id", project.property("mod.id"))
         inputs.property("name", project.property("mod.name"))
         inputs.property("version", project.property("mod.version"))
-        inputs.property("minecraft", project.property("mod.mc_dep"))
+        inputs.property("minecraft", project.property("mod.mc_compat"))
         inputs.property("java_version", requiredJava.majorVersion)
 
         val props = mutableMapOf(
             "id" to project.property("mod.id"),
             "name" to project.property("mod.name"),
             "version" to project.property("mod.version"),
-            "minecraft" to project.property("mod.mc_dep"),
+            "minecraft" to project.property("mod.mc_compat"),
             "java_version" to requiredJava.majorVersion,
         )
         if (accesswidener != null)

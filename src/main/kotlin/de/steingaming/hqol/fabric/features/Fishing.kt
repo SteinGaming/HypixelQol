@@ -59,7 +59,10 @@ object Fishing: Feature {
             val player = mc.player ?: return
             if (player.fishing != null &&
                 player.fishing!!.currentState == FishingHook.FishHookState.HOOKED_IN_ENTITY
-                && player.fishing!!.hookedIn?.type != EntityType.ARMOR_STAND
+                && player.fishing!!.hookedIn?.type != //? if >= 26.2 {
+                net.minecraft.world.entity.EntityTypes.ARMOR_STAND
+                //? } else
+                 //EntityType.ARMOR_STAND
                 && config.recovery.repairMobHooked) {
                 ChatHelper.sendToChat("${player.fishing!!.hookedIn?.type?.toShortString()} Mob hooked! Recasting...")
                 recoveryRecast(range)
@@ -68,7 +71,11 @@ object Fishing: Feature {
             if (player.fishing != null || player.mainHandItem.item != Items.FISHING_ROD) return
             if (config.recovery.repairDisassociatedRod) {
                 val ownedEntities = mc.level?.getEntities(
-                    EntityType.FISHING_BOBBER, Utilities.getAABBEquidistant(
+                    //? >= 26.2 {
+                    net.minecraft.world.entity.EntityTypes.FISHING_BOBBER,
+                    //?} else
+                    //EntityType.FISHING_BOBBER,
+                    Utilities.getAABBEquidistant(
                         player.position(), 34.0
                     )
                 ) { entity ->
@@ -131,7 +138,11 @@ object Fishing: Feature {
         val fishHook = minecraftClient.player?.fishing ?: return@runBlocking
 
         val catching = fishHook.level().getEntities(
-            EntityType.ARMOR_STAND, fishHook.boundingBox.inflate(.0, 0.5, .0)
+            //? if >= 26.2 {
+            net.minecraft.world.entity.EntityTypes.ARMOR_STAND,
+            //? } else
+             //EntityType.ARMOR_STAND,
+            fishHook.boundingBox.inflate(.0, 0.5, .0)
         ) {
             it.displayName!!.string == "!!!"
         }.isNotEmpty()

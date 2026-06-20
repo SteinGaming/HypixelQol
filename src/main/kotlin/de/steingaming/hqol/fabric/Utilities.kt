@@ -1,6 +1,8 @@
 package de.steingaming.hqol.fabric
 
 import kotlinx.coroutines.runBlocking
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
@@ -25,4 +27,10 @@ object Utilities {
             Result.failure(e)
         }
     }
+    fun Minecraft.screen(): Screen? =
+            //? >= 26.2 {
+            this.gui.screen()
+            //? } else
+            //this.screen
+
 }

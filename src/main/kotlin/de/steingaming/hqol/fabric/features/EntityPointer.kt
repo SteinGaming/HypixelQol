@@ -26,7 +26,6 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.phys.AABB
 import kotlin.jvm.optionals.getOrNull
 
 object EntityPointer : Feature {
@@ -104,7 +103,7 @@ object EntityPointer : Feature {
                     }
                     .executes { source ->
                         val input = source.getArgument("entity_type", String::class.java)
-                        val entityType = stringToEntityType(input) ?: let {
+                        val entityType = stringToEntityTypes(input) ?: let {
                             ChatHelper.sendToChat("Couldn't find entity type \"$input\"")
                             return@executes 1
                         }
@@ -122,7 +121,7 @@ object EntityPointer : Feature {
                     builder.buildFuture()
                 }.executes { source ->
                     val input = source.getArgument("entity_type", String::class.java)
-                    val entityType = stringToEntityType(input) ?: let {
+                    val entityType = stringToEntityTypes(input) ?: let {
                         ChatHelper.sendToChat("Couldn't find entity type \"$input\"")
                         return@executes 1
                     }
@@ -136,18 +135,18 @@ object EntityPointer : Feature {
         )
     }
 
-    private fun getEntityTypeRegistry(): Registry<EntityType<*>> =
+    private fun getEntityTypesRegistry(): Registry<EntityType<*>> =
         BuiltInRegistries.ENTITY_TYPE
 
     private fun getAvailableEntityTypes(): List<EntityType<*>> {
-        return getEntityTypeRegistry().toList()
+        return getEntityTypesRegistry().toList()
     }
 
     private fun entityTypeToString(type: EntityType<*>): String {
-        return getEntityTypeRegistry().getKey(type)?.toString() ?: "unknown"
+        return getEntityTypesRegistry().getKey(type)?.toString() ?: "unknown"
     }
 
-    private fun stringToEntityType(str: String): EntityType<*>? {
-        return getEntityTypeRegistry().get(Identifier.parse(str)).getOrNull()?.value()
+    private fun stringToEntityTypes(str: String): EntityType<*>? {
+        return getEntityTypesRegistry().get(Identifier.parse(str)).getOrNull()?.value()
     }
 }

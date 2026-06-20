@@ -4,7 +4,7 @@ plugins {
     // id("me.modmuss50.mod-publish-plugin") version "1.0.+" apply false
 }
 
-stonecutter active "26.1"
+stonecutter active "26.2"
 
 /*
 // Make newer versions be published last
@@ -22,25 +22,18 @@ stonecutter parameters {
     dependencies["fapi"] = node.project.property("deps.fabric_api") as String
 
     replacements {
-        string(current.parsed >= "1.21.11") {
-            replace("ResourceLocation", "Identifier")
-        }
-        string(current.parsed <= "1.21.10") {
-            replace("Identifier", "ResourceLocation")
-        }
-        string(current.parsed < "26.1") {
-            replace("ContainerInput", "ClickType")
-            replace("ClientCommands", "ClientCommandManager")
-            replace("LevelRenderContext", "WorldRenderContext")
-            replace("ClientLevelEvents", "ClientWorldEvents")
-            replace("START_LEVEL_TICK", "START_WORLD_TICK")
-            replace("AFTER_CLIENT_LEVEL_CHANGE", "AFTER_CLIENT_WORLD_CHANGE")
-        }
         string(current.parsed >= "26.1") {
+            replace("ClickType", "ContainerInput")
             replace("ClientCommandManager", "ClientCommands")
             replace("WorldRenderContext", "LevelRenderContext")
             replace("ClientWorldEvents", "ClientLevelEvents")
+            replace("START_WORLD_TICK", "START_LEVEL_TICK")
             replace("AFTER_CLIENT_WORLD_CHANGE", "AFTER_CLIENT_LEVEL_CHANGE")
+        }
+        string(current.parsed >= "26.2") {
+            replace("LIME_WOOL", "WOOL.lime")
+            replace("RED_WOOL", "WOOL.red")
+            replace("CYAN_TERRACOTTA", "DYED_TERRACOTTA.cyan")
         }
     }
 }

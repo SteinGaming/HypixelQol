@@ -3,6 +3,7 @@ package de.steingaming.hqol.fabric.config
 import com.google.gson.annotations.Expose
 import com.mojang.blaze3d.platform.InputConstants
 import de.steingaming.hqol.fabric.HypixelQolFabric
+import de.steingaming.hqol.fabric.Utilities.screen
 import de.steingaming.hqol.fabric.config.categories.Fastleap
 import de.steingaming.hqol.fabric.config.categories.Fishing
 import de.steingaming.hqol.fabric.config.categories.Misc
@@ -37,7 +38,7 @@ class Config: MoulConfig() {
                     editor.configObject.saveNow()
                 }
             }
-            prevTickScreen = Minecraft.getInstance().screen
+            prevTickScreen = Minecraft.getInstance().screen()
         }
     }
 

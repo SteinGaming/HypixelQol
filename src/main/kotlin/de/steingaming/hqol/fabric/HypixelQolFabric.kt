@@ -5,6 +5,7 @@ import de.steingaming.hqol.fabric.features.Fishing
 import de.steingaming.hqol.fabric.features.Rift
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import de.steingaming.hqol.fabric.Utilities.screen
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
 import de.steingaming.hqol.fabric.events.IslandChangedEvent
@@ -70,7 +71,7 @@ class HypixelQolFabric: ModInitializer {
             }
             dispatcher.register(LiteralArgumentBuilder.literal<FabricClientCommandSource>("hqol").executes {
                 it.source.client.apply {
-                    setScreenAndShow(configManager.config.displayConfigUI(screen))
+                    setScreenAndShow(configManager.config.displayConfigUI(Minecraft.getInstance().screen()))
                 }
 
                 Command.SINGLE_SUCCESS

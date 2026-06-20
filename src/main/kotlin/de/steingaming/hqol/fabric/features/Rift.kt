@@ -34,7 +34,11 @@ object Rift: Feature {
 
     var lastActionTime = 0L
     fun onTick(client: Minecraft) = runBlocking {
-        if (client.screen != null || client.isPaused) return@runBlocking
+        val currentScreen = //? if >= 26.2 {
+            client.gui.screen()
+            //?} else
+            //client.screen
+        if (currentScreen != null || client.isPaused) return@runBlocking
         if (hotbarMutex.isLocked) return@runBlocking
         if (System.currentTimeMillis() - lastActionTime - COOLDOWN_MS < 0) return@runBlocking
         val config by HypixelQolFabric
@@ -66,7 +70,11 @@ object Rift: Feature {
         )
 
         val entities = client.level?.getEntities(
-            EntityType.ARMOR_STAND, box
+            //? if >= 26.2 {
+            net.minecraft.world.entity.EntityTypes.ARMOR_STAND,
+            //? } else
+             //EntityType.ARMOR_STAND,
+            box
         ) { true } ?: return
 
         val playerName = client.player!!.gameProfile.name
