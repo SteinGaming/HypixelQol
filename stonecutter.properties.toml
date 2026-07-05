@@ -2,7 +2,7 @@
 mod.id = "hqol"
 mod.name = "HypixelQol"
 mod.group = "de.steingaming"
-mod.version = "v3.5.4"
+mod.version = "v3.5.5"
 
 deps.fabric_loader = "0.19.2"
 loomx.loom_version = "1.17-SNAPSHOT"
