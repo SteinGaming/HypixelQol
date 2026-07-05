@@ -72,7 +72,7 @@ object Fishing: Feature {
         }
         if (player.mainHandItem.item == Items.FISHING_ROD && config.recovery.repairMissingBobber) {
             ChatHelper.sendToChat("Rod may be bugged, couldn't find bobber after 1.8s. Throwing again after random delay...")
-            recoveryRecast(range ?: Range(100, 300))
+            recoveryRecast(null)
         }
     }
 
@@ -90,7 +90,7 @@ object Fishing: Feature {
         hook ?: return@launchWithSafeguard
         hookedIn ?: return@launchWithSafeguard
         val player = Minecraft.getInstance().player ?: return@launchWithSafeguard
-        if (!config.recovery.repairMobHooked || hook.playerOwner?.uuid != player.uuid || (System.currentTimeMillis().milliseconds - lastFishing).inWholeSeconds > 5)
+        if (!config.recovery.repairMobHooked || hook.playerOwner?.uuid != player.uuid || (System.currentTimeMillis().milliseconds - lastFishing).inWholeSeconds > 30)
             return@launchWithSafeguard
         if (hookedIn.type == //? if >= 26.2 {
             net.minecraft.world.entity.EntityTypes.ARMOR_STAND
@@ -164,8 +164,7 @@ object Fishing: Feature {
         val player = minecraftClient.player ?: return
         if (player.mainHandItem.item != Items.FISHING_ROD)
             return
-        val fishingHook = player.fishing ?: return
-        if (fishingHook.isAlive || (System.currentTimeMillis().milliseconds - lastFishing).inWholeSeconds > 5)
+        if (player.fishing?.isAlive == true || (System.currentTimeMillis().milliseconds - lastFishing).inWholeSeconds > 5)
             return
         val ownedEntity = minecraftClient.level?.getEntities(
             //? >= 26.2 {
@@ -178,8 +177,8 @@ object Fishing: Feature {
         ) { entity ->
             entity.owner is Player && entity.owner?.uuid == player.uuid
         }?.firstOrNull()
-        if (ownedEntity != null && ownedEntity.uuid != player.fishing?.uuid) {
-            ChatHelper.sendToChat("Disassociated Bobber found - Rod bugged. Fixing...")
+        if (ownedEntity != null) {
+            ChatHelper.sendToChat("Disassociated bobber found - Rod bugged. Fixing...")
             player.fishing = ownedEntity
         }
     }
