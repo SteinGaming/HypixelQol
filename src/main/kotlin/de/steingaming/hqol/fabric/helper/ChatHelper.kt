@@ -41,6 +41,13 @@ object ChatHelper {
         }
     }
 
+    operator fun Component?.plus(other: String): Component {
+        return Component.empty().let {
+            it.append(this ?: Component.literal("null"))
+            it.append(other)
+        }
+    }
+
     fun CoroutineScope.launchWithSafeguard(context: CoroutineContext = EmptyCoroutineContext,
                                            start: CoroutineStart = CoroutineStart.DEFAULT,
                                            block: suspend CoroutineScope.() -> Unit): Job =

@@ -81,12 +81,7 @@ class Fishing {
 
     class FishingRecovery {
         @Expose
-        @ConfigOption(name = "Repair broken rod", desc = "Automatically recast rod when state is disassociated (bobber exists & texture in hand not correct)\nVery much recommended, as this happens due to desync")
-        @ConfigEditorBoolean
-        var repairDisassociatedRod: Boolean = true
-
-        @Expose
-        @ConfigOption(name = "Repair missing bobber", desc = "Automatically recast rod when bobber is not found (not recommended, but available)")
+        @ConfigOption(name = "Repair missing bobber", desc = "Automatically recast rod when bobber is not found 1s after casting (not recommended)")
         @ConfigEditorBoolean
         var repairMissingBobber: Boolean = false
 
