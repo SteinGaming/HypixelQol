@@ -4,6 +4,7 @@ package de.steingaming.hqol.fabric.features
 
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.Utilities
+import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
 import de.steingaming.hqol.fabric.config.Config.Range
 import de.steingaming.hqol.fabric.helper.ChatHelper
 import de.steingaming.hqol.fabric.helper.ChatHelper.launchWithSafeguard
@@ -133,6 +134,7 @@ object Fishing : Feature {
         }
     }
 
+    val PET_REGEX = Regex(" \\[Lvl (?<level>[0-9]{1,3})\\] (?<name>.+)")
     fun onTick(minecraftClient: Minecraft) = runBlocking {
         checkDisassociatedBobber(minecraftClient)
         if (!config.enabled || config.legacy.legacyEnabled) return@runBlocking
@@ -155,8 +157,23 @@ object Fishing : Feature {
             return@runBlocking
         }
 
-        if (fluid == FluidType.LAVA && config.slugfish && fishHook.tickCount < 400)
-            return@runBlocking
+        if (fluid == FluidType.LAVA && config.slugfish) {
+            var delay = 400
+            val (pet, level) = minecraftClient.player?.connection?.listedOnlinePlayers?.firstOrNull {
+                PET_REGEX.matches(it.tabListDisplayName?.string?.cleanupColorCodes() ?: return@firstOrNull false)
+            }?.let {
+                val groups = PET_REGEX.find(it.tabListDisplayName!!.string.cleanupColorCodes())!!.groups
+                groups["name"]!!.value to groups["level"]!!.value.toInt()
+            } ?: let {
+                ChatHelper.sendToChat("[HypixelQol] §cCould not find pet through tab list! This is required for slug fishing!")
+                (null to 0)
+            }
+            if (pet == "Slug") {
+                delay -= (delay * (0.005 * level)).roundToInt()
+            }
+            if (fishHook.tickCount < delay)
+                return@runBlocking
+        }
 
 
         fishMutex.withLock {

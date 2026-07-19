@@ -69,7 +69,7 @@ class Fishing {
     }
 
     @Expose
-    @ConfigOption(name = "Slugfish toggle", desc = "Wait until bobber is 20s old and only then catch the fish\nChecks if you are fishing in lava as well")
+    @ConfigOption(name = "Slugfish toggle", desc = "Wait until bobber is 20s old and only then catch the fish\nChecks if you are fishing in lava as well. Requires \"Pet\" to be enabled in tab list!")
     @ConfigEditorBoolean
     var slugfish = false
 
