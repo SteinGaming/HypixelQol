@@ -27,7 +27,7 @@
   "custom": { "firmament:hide_from_modlist": true },
   "accessWidener": "hqol-${aw_file}",
   "depends": {
-    "fabricloader": ">=0.16.14",
+    "fabricloader": ">=${fabric_loader}",
     "minecraft": "${minecraft}",
     "java": ">=${java_version}",
     "fabric-api": "*",

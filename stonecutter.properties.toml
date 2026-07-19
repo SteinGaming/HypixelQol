@@ -4,7 +4,7 @@ mod.name = "HypixelQol"
 mod.group = "de.steingaming"
 mod.version = "v3.5.5"
 
-deps.fabric_loader = "0.19.2"
+deps.fabric_loader = "0.19.3"
 loomx.loom_version = "1.17-SNAPSHOT"
 
 
@@ -16,7 +16,6 @@ deps.fabric_api = "0.141.3+1.21.11"
 
 moulconfig.version = "4.6.0"
 modmenu_version = "16.0.0"
-deps.fabric_loader= "0.19.2"
 
 ["26.1"]
 mod.mc_compat = "~26.1"
@@ -26,7 +25,6 @@ deps.fabric_api = "0.145.3+26.1.1"
 
 modmenu_version = "18.0.0-alpha.8"
 moulconfig.version = "4.6.0"
-deps.fabric_loader= "0.18.4"
 
 
 ["26.2"]
@@ -37,4 +35,3 @@ deps.fabric_api = "0.152.2+26.2"
 
 moulconfig.version = "4.7.2"
 modmenu_version = "20.0.0-beta.3"
-deps.fabric_loader = "0.19.3"

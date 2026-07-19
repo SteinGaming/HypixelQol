@@ -95,6 +95,7 @@ tasks {
         inputs.property("version", project.property("mod.version"))
         inputs.property("minecraft", project.property("mod.mc_compat"))
         inputs.property("java_version", requiredJava.majorVersion)
+        inputs.property("fabric_loader", project.property("deps.fabric_loader"))
 
         val props = mutableMapOf(
             "id" to project.property("mod.id"),
@@ -102,6 +103,7 @@ tasks {
             "version" to project.property("mod.version"),
             "minecraft" to project.property("mod.mc_compat"),
             "java_version" to requiredJava.majorVersion,
+            "fabric_loader" to project.property("deps.fabric_loader")
         )
         if (accesswidener != null)
             props["aw_file"] = accesswidener
