@@ -69,6 +69,11 @@ class Fishing {
     }
 
     @Expose
+    @ConfigOption(name = "Slugfish toggle", desc = "Wait until bobber is 20s old and only then catch the fish\nChecks if you are fishing in lava as well")
+    @ConfigEditorBoolean
+    var slugfish = false
+
+    @Expose
     @ConfigOption(name = "Legacy mode - §cEXPERTS ONLY, NO SUPPORT CURRENTLY", desc = "Sound method previously availible on 1.8.9")
     @Accordion
     var legacy: FishingLegacy = FishingLegacy()

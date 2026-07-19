@@ -28,7 +28,7 @@ import kotlin.math.roundToLong
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
-object Fishing: Feature {
+object Fishing : Feature {
 
     private val COROUTINE_SCOPE = CoroutineScope(Dispatchers.Default)
 
@@ -96,13 +96,13 @@ object Fishing: Feature {
             return@launchWithSafeguard
         if (hookedIn.type == //? if >= 26.2 {
             net.minecraft.world.entity.EntityTypes.ARMOR_STAND
-            //? } else
-            //EntityType.ARMOR_STAND
+        //? } else
+        //EntityType.ARMOR_STAND
         ) return@launchWithSafeguard
         delay(Range(500, 700).getRandomValue().milliseconds)
         if (player.fishing?.hookedIn != hookedIn || !hookedIn.isAlive) return@launchWithSafeguard
         ChatHelper.sendToChat(hookedIn.type.description + " hooked! Recasting...")
-        recoveryRecast(getRangeFromHook(hook) ?: Range(100, 300))
+        recoveryRecast(getFluidFromHook(hook)?.getRange() ?: Range(100, 300))
     }
 
     fun onSound(instance: SoundInstance, soundSet: WeighedSoundEvents, range: Float) = runBlocking onSound@{
@@ -117,7 +117,7 @@ object Fishing: Feature {
             when (soundPath) {
                 legacyOptions.waterSoundPath -> spread(config.timings.waterAverage)
                 legacyOptions.lavaSoundPath -> spread(config.timings.lavaAverage)
-                else -> getRangeFromHook(Minecraft.getInstance().player?.fishing ?: return@onSound)
+                else -> getFluidFromHook(Minecraft.getInstance().player?.fishing ?: return@onSound)?.getRange()
                     ?: return@onSound
             }
 
@@ -142,7 +142,7 @@ object Fishing: Feature {
             //? if >= 26.2 {
             net.minecraft.world.entity.EntityTypes.ARMOR_STAND,
             //? } else
-             //EntityType.ARMOR_STAND,
+            //EntityType.ARMOR_STAND,
             fishHook.boundingBox.inflate(.0, 0.5, .0)
         ) {
             it.displayName!!.string == "!!!"
@@ -150,15 +150,19 @@ object Fishing: Feature {
 
         if (!catching) return@runBlocking
 
-        val range = getRangeFromHook(fishHook) ?: let {
+        val fluid = getFluidFromHook(fishHook) ?: let {
             ChatHelper.sendToChat("Could not find a fluid block!")
             return@runBlocking
         }
 
+        if (fluid == FluidType.LAVA && config.slugfish && fishHook.tickCount < 400)
+            return@runBlocking
+
+
         fishMutex.withLock {
             if (fishJob?.isActive == true) return@withLock
             HypixelQolFabric.LOGGER.debug("Starting job using armor stand method")
-            fishJob = launchFishJob(range)
+            fishJob = launchFishJob(fluid.getRange())
         }
     }
 
@@ -185,16 +189,17 @@ object Fishing: Feature {
         }
     }
 
-    private fun getRangeFromHook(
-        fishHook: FishingHook
-    ): Range? {
+    enum class FluidType(val getRange: () -> Range) {
+        WATER({ spread(config.timings.waterAverage) }), LAVA({ spread(config.timings.lavaAverage) })
+    }
+    private fun getFluidFromHook(fishHook: FishingHook): FluidType? {
         val minecraftClient = Minecraft.getInstance()
         for (i in -1..4) {
             val block = minecraftClient.level!!.getBlockState(fishHook.blockPosition().below(i))
             if (block.fluidState.type == Fluids.WATER || block.fluidState.type == Fluids.FLOWING_WATER) {
-                return spread(config.timings.waterAverage)
+                return FluidType.WATER
             } else if (block.fluidState.type == Fluids.LAVA || block.fluidState.type == Fluids.FLOWING_LAVA) {
-                return spread(config.timings.lavaAverage)
+                return FluidType.LAVA
             }
         }
         return null
