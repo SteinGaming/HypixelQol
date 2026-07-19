@@ -19,59 +19,36 @@ class Fishing {
     @Accordion
     var timings = FishingTimings()
 
-    // TODO move to common module maybe?
     class FishingTimings {
         @Expose
         @ConfigOption(
-            name = "Water pre catch delay minimum",
-            desc = "How long to wait at a minimum to reel the rod back in when fishing in water\n§cDO NOT SET THIS TO NEAR 0, THIS WILL HEIGHTEN YOUR CHANCES OF BEING BANNED!"
+            name = "Nominal distribution",
+            desc = "Essentially the spread of each value below, the lower the more consistency.\n§cSETTING TO 0 WILL MAKE THIS SEEM LIKE BOT-LIKE BEHAVIOR"
         )
-        @ConfigEditorSlider(minValue = 0.0f, maxValue = 1000.0f, minStep = 1.0f)
-        var waterPreCatchDelayMin: Float = 150f
+        @ConfigEditorSlider(minValue = 0.0f, maxValue = 1.0f, minStep = 0.1f)
+        var distribution = 0.3
+
         @Expose
         @ConfigOption(
-            name = "Water pre catch delay maximum",
-            desc = "How long to wait at a maximum to reel the rod back in when fishing in water"
+            name = "Water catch delay",
+            desc = "How long to wait on average to reel the rod back in when fishing in water\n§cDO NOT SET THIS TO NEAR 0, THIS WILL HEIGHTEN YOUR CHANCES OF BEING BANNED!"
         )
         @ConfigEditorSlider(minValue = 0.0f, maxValue = 1000.0f, minStep = 1.0f)
-        var waterPreCatchDelayMax: Float = 250f
+        var waterAverage: Float = 300f
         @Expose
         @ConfigOption(
-            name = "Lava pre catch delay minimum",
-            desc = "How long to wait at a minimum to reel the rod back in when fishing in water\n§cDO NOT SET THIS TO NEAR 0, THIS WILL HEIGHTEN YOUR CHANCES OF BEING BANNED!"
+            name = "Lava catch delay",
+            desc = "How long to wait on average to reel the rod back in when fishing in lava\n§cDO NOT SET THIS TO NEAR 0, THIS WILL HEIGHTEN YOUR CHANCES OF BEING BANNED!"
         )
         @ConfigEditorSlider(minValue = 0.0f, maxValue = 1000.0f, minStep = 1.0f)
-        var lavaPreCatchDelayMin: Float = 150f
-        @Expose
-        @ConfigOption(
-            name = "Lava pre catch delay maximum",
-            desc = "How long to wait at a maximum to reel the rod back in when fishing in water"
-        )
-        @ConfigEditorSlider(minValue = 0.0f, maxValue = 1000.0f, minStep = 1.0f)
-        var lavaPreCatchDelayMax: Float = 250f
+        var lavaAverage: Float = 250f
         @Expose
         @ConfigOption(
             name = "Rod cast delay minimum",
-            desc = "How long to wait at a minimum to reel the rod back in when fishing in water\n§cDO NOT SET THIS TO NEAR 0, THIS WILL HEIGHTEN YOUR CHANCES OF BEING BANNED!"
+            desc = "How long to wait on average to throw the rod after reeling in\n§cDO NOT SET THIS TO NEAR 0, THIS WILL HEIGHTEN YOUR CHANCES OF BEING BANNED!"
         )
         @ConfigEditorSlider(minValue = 0.0f, maxValue = 1000.0f, minStep = 1.0f)
-        var castRodDelayMin: Float = 175f
-        @Expose
-        @ConfigOption(
-            name = "Rod cast delay maximum",
-            desc = "How long to wait at a maximum to reel the rod back in when fishing in water"
-        )
-        @ConfigEditorSlider(minValue = 0.0f, maxValue = 1000.0f, minStep = 1.0f)
-        var castRodDelayMax: Float = 225f
-
-        val waterPreCatchDelay: Config.Range
-            get() = Config.Range(waterPreCatchDelayMin.toLong(), waterPreCatchDelayMax.toLong())
-
-        val lavaPreCatchDelay: Config.Range
-            get() = Config.Range(lavaPreCatchDelayMin.toLong(), lavaPreCatchDelayMax.toLong())
-
-        val castRodDelay: Config.Range
-            get() = Config.Range(castRodDelayMin.toLong(), castRodDelayMax.toLong())
+        var castAverage: Float = 225f
     }
 
     @Expose

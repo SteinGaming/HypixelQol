@@ -23,6 +23,8 @@ import net.minecraft.world.entity.projectile.FishingHook
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.phys.Vec3
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -43,17 +45,17 @@ object Fishing: Feature {
 
         if (range != null) {
             delay(range.getRandomValue().milliseconds)
+            if (mc.player?.mainHandItem?.item != Items.FISHING_ROD)
+                return@launchWithSafeguard
             mc.execute {
-                if (mc.player?.mainHandItem?.item != Items.FISHING_ROD)
-                    return@execute
                 mc.startUseItem()
             }
         }
 
-        delay(config.timings.castRodDelay.getRandomValue().milliseconds)
+        delay(spread(config.timings.castAverage).getRandomValue().milliseconds)
+        if (mc.player?.mainHandItem?.item != Items.FISHING_ROD)
+            return@launchWithSafeguard
         mc.execute {
-            if (mc.player?.mainHandItem?.item != Items.FISHING_ROD)
-                return@execute
             mc.startUseItem()
         }
         lastFishing = System.currentTimeMillis().milliseconds
@@ -113,8 +115,8 @@ object Fishing: Feature {
 
         val range =
             when (soundPath) {
-                legacyOptions.waterSoundPath -> config.timings.waterPreCatchDelay
-                legacyOptions.lavaSoundPath -> config.timings.lavaPreCatchDelay
+                legacyOptions.waterSoundPath -> spread(config.timings.waterAverage)
+                legacyOptions.lavaSoundPath -> spread(config.timings.lavaAverage)
                 else -> getRangeFromHook(Minecraft.getInstance().player?.fishing ?: return@onSound)
                     ?: return@onSound
             }
@@ -190,12 +192,20 @@ object Fishing: Feature {
         for (i in -1..4) {
             val block = minecraftClient.level!!.getBlockState(fishHook.blockPosition().below(i))
             if (block.fluidState.type == Fluids.WATER || block.fluidState.type == Fluids.FLOWING_WATER) {
-                return config.timings.waterPreCatchDelay
+                return spread(config.timings.waterAverage)
             } else if (block.fluidState.type == Fluids.LAVA || block.fluidState.type == Fluids.FLOWING_LAVA) {
-                return config.timings.lavaPreCatchDelay
+                return spread(config.timings.lavaAverage)
             }
         }
         return null
+    }
+
+    private fun spread(value: Float): Range {
+        val distribution = config.timings.distribution
+        return Range(
+            (value - value * distribution).roundToLong(),
+            (value + value * distribution).roundToLong()
+        )
     }
 
     override fun init(mc: Minecraft) {
