@@ -28,14 +28,25 @@ repositories {
     maven("https://maven.isxander.dev/releases") {
         name = "Xander Maven"
     }
+    /* Very unreliable :DDD
     maven("https://maven.terraformersmc.com/") {
         name = "Terraformers"
-    }
+    }*/
     maven("https://repo.steingaming.de/releases/") {
         name = "NEU-custom"
     }
     maven("https://repo.hypixel.net/repository/Hypixel") {
         name = "Hypixel"
+    }
+    exclusiveContent {
+        forRepository {
+            maven("https://api.modrinth.com/maven") {
+                name = "Modrinth"
+            }
+        }
+        filter {
+            includeGroup("maven.modrinth")
+        }
     }
     //maven("https://maven.notenoughupdates.org/releases/")
 }
@@ -58,7 +69,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:1.13.12+kotlin.2.4.0")
     modImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
     shadowModImpl("org.notenoughupdates.moulconfig:modern-${sc.current.version}:${project.property("moulconfig.version")}")
-    modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
+    modImplementation("maven.modrinth:modmenu:${project.property("modmenu_version")}-fabric,${sc.current.version}")
     modImplementation("net.hypixel:mod-api:1.0.2")
     //modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
     fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0", "fabric-command-api-v2", "fabric-sound-api-v1", "fabric-renderer-api-v1", "fabric-rendering-v1", "fabric-content-registries-v0", "fabric-registry-sync-v0")

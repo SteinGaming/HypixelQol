@@ -15,7 +15,7 @@ mod.mc_releases = ["1.21.11"]
 deps.fabric_api = "0.141.3+1.21.11"
 
 moulconfig.version = "4.6.0"
-modmenu_version = "16.0.0"
+modmenu_version = "17.0.0"
 
 ["26.1"]
 mod.mc_compat = "~26.1"
@@ -23,7 +23,7 @@ mod.mc_releases = ["26.1", "26.1.1"]
 
 deps.fabric_api = "0.145.3+26.1.1"
 
-modmenu_version = "18.0.0-alpha.8"
+modmenu_version = "18.0.0"
 moulconfig.version = "4.6.0"
 
 
@@ -34,4 +34,4 @@ mod.mc_releases = ["26.2"]
 deps.fabric_api = "0.152.2+26.2"
 
 moulconfig.version = "4.7.2"
-modmenu_version = "20.0.0-beta.3"
+modmenu_version = "20.0.1"
