@@ -100,6 +100,15 @@ object Fishing : Feature {
         //? } else
         //EntityType.ARMOR_STAND
         ) return@launchWithSafeguard
+        if (config.recovery.ignorePuddleJumper && hookedIn.level().getEntities(//? if >= 26.2 {
+                net.minecraft.world.entity.EntityTypes.ARMOR_STAND
+                //? } else
+                //EntityType.ARMOR_STAND
+                , Utilities.getAABBEquidistant(hookedIn.position(), 3.0).inflate(0.0, 3.0, 0.0)
+            ) {
+                it.displayName.string.cleanupColorCodes().contains("Puddle Jumper")
+            }.isNotEmpty()
+        ) return@launchWithSafeguard
         delay(Range(500, 700).getRandomValue().milliseconds)
         if (player.fishing?.hookedIn != hookedIn || !hookedIn.isAlive) return@launchWithSafeguard
         ChatHelper.sendToChat(hookedIn.type.description + " hooked! Recasting...")
@@ -209,6 +218,7 @@ object Fishing : Feature {
     enum class FluidType(val getRange: () -> Range) {
         WATER({ spread(config.timings.waterAverage) }), LAVA({ spread(config.timings.lavaAverage) })
     }
+
     private fun getFluidFromHook(fishHook: FishingHook): FluidType? {
         val minecraftClient = Minecraft.getInstance()
         for (i in -1..4) {

@@ -66,6 +66,11 @@ class Fishing {
         @ConfigOption(name = "Repair mob hooked", desc = "Automatically recast rod when bobber is stuck inside of an entity")
         @ConfigEditorBoolean
         var repairMobHooked: Boolean = false
+
+        @Expose
+        @ConfigOption(name = "Puddle jumper hold", desc = "Don't unhook the rod if the caught mob is a puddle jumper")
+        @ConfigEditorBoolean
+        var ignorePuddleJumper: Boolean = false
     }
 
     @Expose
