@@ -48,7 +48,9 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
-    //maven("https://maven.notenoughupdates.org/releases/")
+    maven("https://maven.notenoughupdates.org/releases/") {
+        name = "NEU"
+    }
 }
 val shadowModImpl by configurations.creating {
     configurations.modImplementation.get().extendsFrom(this)
@@ -139,6 +141,9 @@ tasks {
     } else {
         build.get().dependsOn("shadowJar")
     }
+    // For 26.1+ shadowJar's output has no classifier, so the plain jar would write to the very same file
+    // and (depending on task order) overwrite it with an unrelocated jar missing moulconfig.
+    if (sc.current.parsed >= "26.1") jar { archiveClassifier.set("slim") }
     shadowJar {
         archiveClassifier.set(
             if (sc.current.parsed < "26.1") "dev" else ""
@@ -146,10 +151,12 @@ tasks {
         mergeServiceFiles()
         relocate("io.github.notenoughupdates.moulconfig", "de.steingaming.hqol.deps.moulconfig")
         configurations = listOf(shadowModImpl)
-        if (sc.current.parsed >= "26.1") copy {
-                from(archiveFile)
-                into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
-            }
+        if (sc.current.parsed >= "26.1") finalizedBy("copyShadowJar")
+    }
+
+    if (sc.current.parsed >= "26.1") register<Copy>("copyShadowJar") {
+        from(shadowJar.flatMap { it.archiveFile })
+        into(rootProject.layout.buildDirectory.dir("libs/${project.property("mod.version")}"))
     }
 
     register<Copy>("buildAndCollect") {
