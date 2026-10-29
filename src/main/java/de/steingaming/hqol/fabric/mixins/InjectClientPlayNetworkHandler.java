@@ -1,6 +1,8 @@
 package de.steingaming.hqol.fabric.mixins;
 
 import de.steingaming.hqol.fabric.features.Fastleap;
+import de.steingaming.hqol.fabric.features.Fishing;
+import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
@@ -21,6 +23,12 @@ public class InjectClientPlayNetworkHandler {
     @Inject(method = "handleContainerContent", at = @At("HEAD"), cancellable = true)
     public void handleContainerContent(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (Fastleap.setSlotPacket(packet))
+            ci.cancel();
+    }
+
+    @Inject(method = "handleContainerClose", at = @At("HEAD"), cancellable = true)
+    public void handleContainerClose(ClientboundContainerClosePacket packet, CallbackInfo ci) {
+        if (Fishing.shouldIgnoreContainerClose())
             ci.cancel();
     }
 }

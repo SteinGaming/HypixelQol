@@ -5,6 +5,7 @@ package de.steingaming.hqol.fabric.features
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.Utilities
 import de.steingaming.hqol.fabric.Utilities.cleanupColorCodes
+import de.steingaming.hqol.fabric.Utilities.screen
 import de.steingaming.hqol.fabric.config.Config.Range
 import de.steingaming.hqol.fabric.helper.ChatHelper
 import de.steingaming.hqol.fabric.helper.ChatHelper.launchWithSafeguard
@@ -15,6 +16,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.resources.sounds.SoundInstance
 import net.minecraft.client.sounds.WeighedSoundEvents
 import net.minecraft.world.entity.Entity
@@ -40,6 +42,28 @@ object Fishing : Feature {
 
     var lastFishing = Duration.ZERO
 
+    /** Last time the mod used the rod while a container screen was open, in epoch millis. */
+    @Volatile
+    private var lastRodUseWithContainer = 0L
+
+    /**
+     * Using the rod makes the server close the open container, which would kick the player out of
+     * chests, bazaar etc. while auto fishing. Returns true if an incoming container close should be ignored.
+     */
+    @JvmStatic
+    fun shouldIgnoreContainerClose(): Boolean {
+        if (!config.enabled || !config.keepContainersOpen) return false
+        val mc = Minecraft.getInstance()
+        if (mc.screen() !is AbstractContainerScreen<*>) return false
+        return System.currentTimeMillis() - lastRodUseWithContainer < 1500
+    }
+
+    private fun useRod(mc: Minecraft) = mc.execute {
+        if (mc.screen() is AbstractContainerScreen<*>)
+            lastRodUseWithContainer = System.currentTimeMillis()
+        mc.startUseItem()
+    }
+
     @JvmStatic
     fun launchFishJob(range: Range?): Job = COROUTINE_SCOPE.launchWithSafeguard {
         val mc = Minecraft.getInstance()
@@ -48,17 +72,13 @@ object Fishing : Feature {
             delay(range.getRandomValue().milliseconds)
             if (mc.player?.mainHandItem?.item != Items.FISHING_ROD)
                 return@launchWithSafeguard
-            mc.execute {
-                mc.startUseItem()
-            }
+            useRod(mc)
         }
 
         delay(spread(config.timings.castAverage).getRandomValue().milliseconds)
         if (mc.player?.mainHandItem?.item != Items.FISHING_ROD)
             return@launchWithSafeguard
-        mc.execute {
-            mc.startUseItem()
-        }
+        useRod(mc)
         lastFishing = System.currentTimeMillis().milliseconds
         // Post delay
         delay(200.milliseconds)

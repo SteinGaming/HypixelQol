@@ -74,6 +74,11 @@ class Fishing {
     }
 
     @Expose
+    @ConfigOption(name = "Keep containers open", desc = "Don't close open chests, the bazaar and other container GUIs when the rod is reeled in or cast")
+    @ConfigEditorBoolean
+    var keepContainersOpen: Boolean = true
+
+    @Expose
     @ConfigOption(name = "Slugfish toggle", desc = "Wait until bobber is 20s old and only then catch the fish\nChecks if you are fishing in lava as well. Requires \"Pet\" to be enabled in tab list!")
     @ConfigEditorBoolean
     var slugfish = false

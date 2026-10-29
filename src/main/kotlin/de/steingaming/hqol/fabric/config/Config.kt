@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose
 import com.mojang.blaze3d.platform.InputConstants
 import de.steingaming.hqol.fabric.HypixelQolFabric
 import de.steingaming.hqol.fabric.Utilities.screen
+import de.steingaming.hqol.fabric.config.categories.Controls
 import de.steingaming.hqol.fabric.config.categories.Fastleap
 import de.steingaming.hqol.fabric.config.categories.Fishing
 import de.steingaming.hqol.fabric.config.categories.Misc
@@ -53,6 +54,10 @@ class Config: MoulConfig() {
     @Expose
     @Category(name = "Fastleap", desc = "Fastleap feature for dungeons")
     val fastleap: Fastleap = Fastleap()
+
+    @Expose
+    @Category(name = "Controls", desc = "Hotkeys")
+    val controls: Controls = Controls()
 
     @Expose
     @Category(name = "Misc", desc = "Random settings that don't require their own category")

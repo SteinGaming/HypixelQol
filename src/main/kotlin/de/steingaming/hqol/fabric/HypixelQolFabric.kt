@@ -9,6 +9,7 @@ import de.steingaming.hqol.fabric.Utilities.screen
 import de.steingaming.hqol.fabric.config.Config
 import de.steingaming.hqol.fabric.config.ConfigManager
 import de.steingaming.hqol.fabric.events.IslandChangedEvent
+import de.steingaming.hqol.fabric.features.AutoSneak
 import de.steingaming.hqol.fabric.features.EntityPointer
 import de.steingaming.hqol.fabric.features.FirmamentWarning
 import de.steingaming.hqol.fabric.features.StructureScanner
@@ -37,7 +38,7 @@ class HypixelQolFabric: ModInitializer {
         }
         val RANDOM = Random(System.currentTimeMillis())
 
-        val FEATURE_LIST = listOf(EntityPointer, Fastleap, Fishing, Rift, StructureScanner)
+        val FEATURE_LIST = listOf(AutoSneak, EntityPointer, Fastleap, Fishing, Rift, StructureScanner)
     }
 
     lateinit var configManager: ConfigManager
